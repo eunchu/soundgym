@@ -1,0 +1,36 @@
+/* 추천페이지 팔로우 추천 swiper */
+.follow-swiper .swiper-slide {
+  height: 224px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  border-radius: 12px;
+  background-color: #ffffff;
+
+  padding: 30px 0 32px 0;
+}
+/* 모바일에서의 스타일 */
+.follow-swiper .swiper-button-next {
+  top: calc(50% + 10px);
+  background: url("../images/ic-arrow-right.svg") no-repeat;
+}
+/* 모바일에서의 스타일 */
+.follow-swiper .swiper-button-prev {
+  top: calc(50% + 10px);
+  background: url("../images/ic-arrow-left.svg") no-repeat;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none;
+}
+/* 추천페이지 상단 태그 리스트 swiper */
+.tag-swiper .swiper-slide {
+  width: auto !important;
+}
+
+/* 매거진 tab swiper */
+.magazine-swiper .swiper-slide {
+  width: auto !important;
+}
