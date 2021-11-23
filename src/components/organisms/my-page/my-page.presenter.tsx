@@ -220,6 +220,7 @@ const TextArea = styled.textarea`
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   color: #38323c;
+  padding: 0;
 `;
 const MoreBtn = styled.div`
   color: #3d84fb;

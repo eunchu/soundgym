@@ -245,6 +245,7 @@ const TextArea = styled.textarea`
   -webkit-box-orient: vertical;
   color: #38323c;
 
+  padding: 0;
   margin-bottom: 14px;
 `;
 // <<< Style

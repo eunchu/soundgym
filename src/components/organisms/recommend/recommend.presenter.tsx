@@ -181,6 +181,7 @@ const TextArea = styled.textarea`
   -webkit-box-orient: vertical;
   color: #38323c;
 
+  padding: 0;
   cursor: pointer;
 `;
 const MoreBtn = styled.div`
