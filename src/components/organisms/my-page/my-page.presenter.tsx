@@ -88,7 +88,8 @@ const TopArea = styled.div`
         padding: 0 16px;
       `};
       li {
-        padding-right: 16px;
+        width: 60px;
+        margin-right: 10px;
         p.title {
           font-size: 12px;
           line-height: 18px;
@@ -232,6 +233,14 @@ const ImgArea = styled.div<ImgAreaProps>`
   position: relative;
 
   width: 100%;
+  padding-right: ${(props) =>
+    props.num >= 3
+      ? "20px"
+      : props.num === 2
+      ? "10px"
+      : props.num === 1
+      ? "none"
+      : "none"};
 
   display: flex;
   align-items: center;
@@ -242,6 +251,7 @@ const ImgArea = styled.div<ImgAreaProps>`
     top: 0;
     right: 0;
 
+    width: calc(33.3% - 6px);
     height: 100%;
 
     display: flex;
@@ -256,15 +266,13 @@ const ImgArea = styled.div<ImgAreaProps>`
     background-color: rgba(56, 50, 60, 0.9);
     border-radius: 8px;
     cursor: pointer;
-    img {
-    }
   }
   .img {
     width: ${(props) =>
       props.num >= 3
-        ? "calc(33.3% - 6px)"
+        ? "33.3%"
         : props.num === 2
-        ? "calc(50% - 4px)"
+        ? "50%"
         : props.responsiveWidth};
     border-radius: 8px;
     margin-right: 10px;
@@ -598,9 +606,9 @@ const Mypage = ({ posts, activeTab, onClickTab }: MypageProps) => {
                       responsiveWidth={Mobile ? "100%" : "328px"}
                     >
                       {post.imgs.map((url: string, i: number) => {
-                        return i === 2 ? (
+                        return i === 2 && post.imgs.length > 3 ? (
                           <Fragment key={i}>
-                            <div className="img cover" key={i}>
+                            <div className="cover" key={i}>
                               + {post.imgs.length - 3}
                             </div>
                             <img className="img" src={ImgPost} alt="" />

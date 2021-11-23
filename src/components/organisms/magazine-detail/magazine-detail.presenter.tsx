@@ -30,6 +30,7 @@ const Card = styled.section`
 
   ${mediaQueries("mobile")`
     width: 100%;
+    padding-bottom: 40px;
   `};
 `;
 const TopArea = styled.div`
@@ -120,13 +121,7 @@ const TopArea = styled.div`
   }
 `;
 const ImgArea = styled.div`
-  height: 400px;
-
   margin-bottom: 40px;
-
-  ${mediaQueries("mobile")`
-    height: 214px;
-  `};
   img {
     width: 100%;
   }

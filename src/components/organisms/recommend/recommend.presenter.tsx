@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import { Fragment, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import { Menu, Dropdown } from "antd";
@@ -27,7 +27,8 @@ import ImgThumbnail from "assets/images/img-post-thumbnail.png";
 import IconStarOn from "assets/images/ic-star-on.png";
 import IconStarOff from "assets/images/ic-star-off.png";
 import ImgFollowProfile from "assets/images/img-follow-profile.png";
-import IconArrowPrev from "assets/images/ic-arrow-left.svg";
+import IconArrowPrev from "assets/images/ic-arrow-prev.svg";
+import IconArrowPrevGray from "assets/images/ic-arrow-prev-gray.svg";
 import IconArrowNext from "assets/images/ic-arrow-right.svg";
 
 import { FollowButton } from "components/atoms/buttons";
@@ -102,7 +103,7 @@ const Card = styled.section`
   border-radius: 8px;
 
   padding: 24px 24px 0 24px;
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 
   ${mediaQueries("mobile")`
     padding: 24px 16px 0 16px;
@@ -165,6 +166,8 @@ const PostTag = styled.span`
   margin-bottom: 16px;
 `;
 const TextArea = styled.textarea`
+  width: 100%;
+
   border: none;
   resize: none;
 
@@ -177,6 +180,8 @@ const TextArea = styled.textarea`
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   color: #38323c;
+
+  cursor: pointer;
 `;
 const MoreBtn = styled.div`
   color: #3d84fb;
@@ -190,6 +195,14 @@ const ImgArea = styled.div<ImgAreaProps>`
   position: relative;
 
   width: 100%;
+  padding-right: ${(props) =>
+    props.num >= 3
+      ? "20px"
+      : props.num === 2
+      ? "10px"
+      : props.num === 1
+      ? "none"
+      : "none"};
 
   display: flex;
   align-items: center;
@@ -200,6 +213,7 @@ const ImgArea = styled.div<ImgAreaProps>`
     top: 0;
     right: 0;
 
+    width: calc(33.3% - 6px);
     height: 100%;
 
     display: flex;
@@ -214,15 +228,13 @@ const ImgArea = styled.div<ImgAreaProps>`
     background-color: rgba(56, 50, 60, 0.9);
     border-radius: 8px;
     cursor: pointer;
-    img {
-    }
   }
   .img {
     width: ${(props) =>
       props.num >= 3
-        ? "calc(33.3% - 6px)"
+        ? "33.3%"
         : props.num === 2
-        ? "calc(50% - 4px)"
+        ? "50%"
         : props.responsiveWidth};
     border-radius: 8px;
     margin-right: 10px;
@@ -441,6 +453,10 @@ const Recommend = ({
   followList,
   onMoveDetail,
 }: RecommendProps) => {
+  // swiper left arrow 색 변경을 위한 slide index 상태
+  const [tagSlideNumber, setTagSlideNumber] = useState<number>(0);
+  const [followSlideNumber, setFollowSlideNumber] = useState<number>(0);
+
   // 모바일 사이즈
   const Mobile = useMediaQuery({ query: "(max-width: 767px)" });
 
@@ -483,6 +499,9 @@ const Recommend = ({
               nextEl: ".swiper-button-next-custom2",
               prevEl: ".swiper-button-prev-custom2",
             }}
+            onActiveIndexChange={(swiper) =>
+              setTagSlideNumber(swiper.activeIndex)
+            }
           >
             {tags?.map((tag, i) => (
               <SwiperSlide key={i}>
@@ -492,7 +511,11 @@ const Recommend = ({
           </Swiper>
         </div>
         <div className="swiper-button-prev-custom2">
-          <img src={IconArrowPrev} alt="" />
+          {tagSlideNumber === 0 ? (
+            <img src={IconArrowPrevGray} alt="" />
+          ) : (
+            <img src={IconArrowPrev} alt="" />
+          )}
         </div>
         <div className="swiper-button-next-custom2">
           <img src={IconArrowNext} alt="" />
@@ -522,28 +545,27 @@ const Recommend = ({
                   <PostTag key={i}>{tag}</PostTag>
                 ))}
               </PostTagArea>
-              <TextArea rows={3} readOnly value={post.desc} />
-              {post.desc.length > 175 && (
-                // 상세페이지로 연결
-                <MoreBtn onClick={() => onMoveDetail({ post })}>더보기</MoreBtn>
-              )}
-              <ImgArea
-                num={post.imgs.length}
-                responsiveWidth={Mobile ? "100%" : "328px"}
-              >
-                {post.imgs.map((url: string, i: number) => {
-                  return i === 2 ? (
-                    <Fragment key={i}>
-                      <div className="img cover" key={i}>
-                        + {post.imgs.length - 3}
-                      </div>
-                      <img className="img" src={ImgPost} alt="" />
-                    </Fragment>
-                  ) : i < 3 ? (
-                    <img className="img" key={i} src={ImgPost} alt="" />
-                  ) : null;
-                })}
-              </ImgArea>
+              <div onClick={() => onMoveDetail({ post })}>
+                <TextArea rows={3} readOnly value={post.desc} />
+                {post.desc.length > 175 && <MoreBtn>더보기</MoreBtn>}
+                <ImgArea
+                  num={post.imgs.length}
+                  responsiveWidth={Mobile ? "100%" : "328px"}
+                >
+                  {post.imgs.map((url: string, i: number) => {
+                    return i === 2 && post.imgs.length > 3 ? (
+                      <Fragment key={i}>
+                        <div className="cover" key={i}>
+                          + {post.imgs.length - 3}
+                        </div>
+                        <img className="img" src={ImgPost} alt="" />
+                      </Fragment>
+                    ) : i < 3 ? (
+                      <img className="img" key={i} src={ImgPost} alt="" />
+                    ) : null;
+                  })}
+                </ImgArea>
+              </div>
             </CardContents>
             {post.link && (
               <ConnectLink>
@@ -638,6 +660,9 @@ const Recommend = ({
                       spaceBetween: 16,
                     },
                   }}
+                  onActiveIndexChange={(swiper) =>
+                    setFollowSlideNumber(swiper.activeIndex)
+                  }
                 >
                   {followList?.map((follow: any, i) => (
                     <SwiperSlide key={i}>
@@ -661,7 +686,11 @@ const Recommend = ({
               </div>
               <Default>
                 <div className="swiper-button-prev-custom">
-                  <img src={IconArrowPrev} alt="" />
+                  {followSlideNumber === 0 ? (
+                    <img src={IconArrowPrevGray} alt="" />
+                  ) : (
+                    <img src={IconArrowPrev} alt="" />
+                  )}
                 </div>
                 <div className="swiper-button-next-custom">
                   <img src={IconArrowNext} alt="" />

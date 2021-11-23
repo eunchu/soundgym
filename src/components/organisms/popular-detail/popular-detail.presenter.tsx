@@ -93,10 +93,10 @@ const Contents = styled.section`
   width: 672px;
 
   margin: auto;
-  padding: 24px 0;
+  padding: 24px 0 60px 0;
   ${mediaQueries("mobile")`
     width: 100%;
-    padding: 24px 16px;
+    padding: 24px 16px 60px 16px;
   `};
 `;
 const TabArea = styled.div`
@@ -149,6 +149,9 @@ const Card = styled.section`
   grid-row-end: span 6;
 
   margin-bottom: 16px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   ${mediaQueries("mobile")`
     width: calc(100% - 16px);
   `};
@@ -298,7 +301,7 @@ const PopularDetail = ({ post, activeTab, onClickTab }: PopularDetailProps) => {
         </TabArea>
         <CardArea>
           {post.posts?.map((post: any) => (
-            <Card>
+            <Card key={post.id}>
               <div className="img"></div>
               {/* 이미지 연결 시 클래스명 유지해주세요 */}
               {/* <img className="img" src={post.thumbnail} alt="" /> */}

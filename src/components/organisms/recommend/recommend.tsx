@@ -100,7 +100,7 @@ const Recommend = () => {
         isFollow: true,
         tags: [],
         desc: `트레이너쌤이 알려주시는대로 플랭크 하니 엄청 땡기네요 혼자하면 불가능하지만 같이 하니까 꾸준히 할수있는 것 같아요. 특히 코어 부분에 집중을 하면서, 호흡을. 할수있는 것 같아요. 특히 코어 부분에 집중을 하면서, 호흡을.`,
-        imgs: [1, 2, 3, 4],
+        imgs: [1, 2, 3, 4, 5],
         favorite: 12,
         comment: 2,
         link: null,
@@ -148,7 +148,7 @@ const Recommend = () => {
   useEffect(() => {
     const list = Array.from(Array(12)).map((val, i) => ({
       img: "",
-      name: `고도희${i}`,
+      name: `고도희`,
       desc: "체력 및 몸매관리 근황",
       isFollow: i === 4 ? true : false,
     }));

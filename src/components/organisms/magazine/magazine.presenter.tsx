@@ -16,10 +16,12 @@ import { mediaQueries } from "assets/styles/media";
 import ImgProfile from "assets/images/img-profile.png";
 import IconBookmark from "assets/images/ic-bookmark.png";
 import ImgMagazine from "assets/images/img-magazine.png";
-import IconArrowPrev from "assets/images/ic-arrow-left.svg";
+import IconArrowPrev from "assets/images/ic-arrow-prev.svg";
+import IconArrowPrevGray from "assets/images/ic-arrow-prev-gray.svg";
 import IconArrowNext from "assets/images/ic-arrow-right.svg";
 
 import { Default, Mobile } from "utils";
+import { useState } from "react";
 
 // Swiper modules
 SwiperCore.use([Pagination, Navigation, EffectFade, Autoplay]);
@@ -28,7 +30,7 @@ SwiperCore.use([Pagination, Navigation, EffectFade, Autoplay]);
  * Style >>>
  */
 const Container = styled.div`
-  padding: 24px 0;
+  padding: 24px 0 60px 0;
 `;
 const TabArea = styled.section`
   position: relative;
@@ -89,6 +91,9 @@ const Card = styled.section`
 
   margin-bottom: 20px;
   padding: 24px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   ${mediaQueries("mobile")`
     padding: 20px 16px;
   `};
@@ -119,15 +124,11 @@ const CardHeader = styled.div`
 `;
 const Thumnail = styled.div`
   width: 100%;
-  height: 311px;
 
   border-radius: 8px;
   overflow: hidden;
 
   margin-bottom: 20px;
-  ${mediaQueries("mobile")`
-    height: 163px;
-  `};
   img {
     width: 100%;
   }
@@ -167,6 +168,9 @@ const Magazine = ({
   onClickTab,
   onMoveDetail,
 }: MagazineProps) => {
+  // swiper left arrow 색 변경을 위한 slide index 상태
+  const [tagSlideNumber, setTagSlideNumber] = useState<number>(0);
+
   // 탭 메뉴
   const tabMenu = ["전체", "동기부여", "식단", "운동", "정보"];
 
@@ -178,6 +182,7 @@ const Magazine = ({
         <TabArea>
           {tabMenu.map((menu) => (
             <Tab
+              key={menu}
               active={activeTab === menu}
               onClick={() => onClickTab({ tab: menu })}
             >
@@ -199,9 +204,12 @@ const Magazine = ({
                 nextEl: ".swiper-button-next-custom",
                 prevEl: ".swiper-button-prev-custom",
               }}
+              onActiveIndexChange={(swiper) =>
+                setTagSlideNumber(swiper.activeIndex)
+              }
             >
               {tabMenu.map((menu) => (
-                <SwiperSlide>
+                <SwiperSlide key={menu}>
                   <Tab
                     active={activeTab === menu}
                     onClick={() => onClickTab({ tab: menu })}
@@ -213,7 +221,11 @@ const Magazine = ({
             </Swiper>
           </div>
           <div className="swiper-button-prev-custom">
-            <img src={IconArrowPrev} alt="" />
+            {tagSlideNumber === 0 ? (
+              <img src={IconArrowPrevGray} alt="" />
+            ) : (
+              <img src={IconArrowPrev} alt="" />
+            )}
           </div>
           <div className="swiper-button-next-custom">
             <img src={IconArrowNext} alt="" />
@@ -223,7 +235,7 @@ const Magazine = ({
       {/* 매거진 Card UI */}
       {posts?.map((post: any) => (
         // 매거진 게시글 api 내부에 게시글상세도 포함될 경우 post정보 넘겨서 사용해주세요
-        <Card onClick={() => onMoveDetail({ post })}>
+        <Card key={post.id} onClick={() => onMoveDetail({ post })}>
           <CardHeader>
             <div className="user">
               {/* api 연결 시 사용해주세요 */}

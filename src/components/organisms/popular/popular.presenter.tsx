@@ -14,7 +14,7 @@ import IconCrown from "assets/images/ic-crown.svg";
  * Style >>>
  */
 const Container = styled.div`
-  margin: 20px 0;
+  margin: 20px 0 60px 0;
 `;
 const Card = styled.section`
   width: 100%;
@@ -171,6 +171,7 @@ const TextArea = styled.textarea`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   color: #38323c;
+  padding: 0;
 
   ${mediaQueries("mobile")`
     height: 68px;
@@ -191,7 +192,7 @@ const Popular = ({ posts, onMoveDetail }: PopularProps) => {
   return (
     <Container>
       {posts?.map((post: any) => (
-        <Card>
+        <Card key={post.id}>
           <Top>
             <h2>{post.tag}</h2>
             <div onClick={() => onMoveDetail({ post })}>

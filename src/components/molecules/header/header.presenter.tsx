@@ -55,7 +55,7 @@ const Nav = styled.li<NavProps>`
   display: flex;
   align-items: center;
 
-  font-family: ${(props) => (props.active ? "neo-bold" : "neo-medium")};
+  font-family: ${(props) => (props.active ? "neo-bold" : "neo-regular")};
   color: #606872;
   line-height: 22px;
 

@@ -33,6 +33,10 @@ const FollowBtn = styled(UnFollowBtn)`
 `;
 // <<< Style
 
+/**
+ * @isFollow : 팔로우 여부를 boolean 값으로 받아 스타일 변경합니다
+ * @onClick : [optional] 클릭 이벤트 연결
+ */
 interface FollowButtonProps {
   isFollow: boolean;
   onClick?: () => void;

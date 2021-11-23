@@ -27,6 +27,8 @@ import IconBookmark from "assets/images/ic-bookmark.png";
 import IconShare from "assets/images/ic-share.png";
 import IconNext from "assets/images/ic-arrow-next-circle.png";
 
+import { Default, Mobile } from "utils";
+
 import { FollowButton } from "components/atoms/buttons";
 import { openPopup } from "components/molecules/popup/popup";
 
@@ -244,7 +246,7 @@ const RightArea = styled.div<RightAreaProps>`
     line-height: 22px;
     color: #38323c;
 
-    padding: 20px 0 30px;
+    padding: 16px 0 40px;
     margin-bottom: 14px;
     overflow-y: hidden;
 
@@ -352,6 +354,32 @@ const CardFooter = styled.div`
       }
     }
   }
+`;
+const TagArea = styled.div`
+  display: flex;
+  margin-top: 16px;
+  ${mediaQueries("mobile")`
+    margin-top: 0;
+  `};
+`;
+const PostTag = styled.span`
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #d8e6fe;
+  border-radius: 32px;
+
+  color: #3d84fb;
+  font-size: 12px;
+  line-height: 18px;
+
+  padding: 0 16px;
+  ${mediaQueries("mobile")`
+    margin-bottom: 16px;
+  `};
 `;
 // <<< Style
 
@@ -485,8 +513,18 @@ const RecommendDetail = ({
                   </ul>
                 </div>
               </ConnectLink>
+              <Mobile>
+                <TagArea>
+                  <PostTag>#하루한번샐러드</PostTag>
+                </TagArea>
+              </Mobile>
             </LeftArea>
             <RightArea postHeight={postHeight}>
+              <Default>
+                <TagArea>
+                  <PostTag>#하루한번샐러드</PostTag>
+                </TagArea>
+              </Default>
               <textarea
                 ref={postTextEl}
                 className="desc"
