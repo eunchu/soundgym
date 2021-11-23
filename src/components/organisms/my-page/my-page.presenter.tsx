@@ -147,6 +147,10 @@ const Card = styled.section`
   padding: 24px 24px 0 24px;
   margin-bottom: 20px;
 
+  &:last-child {
+    margin-bottom: 60px;
+  }
+
   ${mediaQueries("mobile")`
     padding: 24px 16px 0 16px;
   `};
@@ -569,8 +573,8 @@ const Mypage = ({ posts, activeTab, onClickTab }: MypageProps) => {
         {activeTab === "피드" ? (
           <>
             {posts?.map((post: any, i) => (
-              <div key={post.id}>
-                <Card>
+              <>
+                <Card key={post.id}>
                   <CardHeader>
                     <div className="header">
                       <img src={ImgProfile} alt="" />
@@ -689,7 +693,7 @@ const Mypage = ({ posts, activeTab, onClickTab }: MypageProps) => {
                     </ul>
                   </CardFooter>
                 </Card>
-              </div>
+              </>
             ))}
           </>
         ) : (

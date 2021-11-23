@@ -103,7 +103,11 @@ const Card = styled.section`
   border-radius: 8px;
 
   padding: 24px 24px 0 24px;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 60px;
+  }
 
   ${mediaQueries("mobile")`
     padding: 24px 16px 0 16px;
@@ -524,8 +528,8 @@ const Recommend = ({
       </TagArea>
       {/* Posting list */}
       {posts?.map((post: any, i) => (
-        <div key={post.id}>
-          <Card>
+        <>
+          <Card key={post.id}>
             <CardHeader>
               <div className="header">
                 <img src={ImgProfile} alt="" />
@@ -699,7 +703,7 @@ const Recommend = ({
               </Default>
             </FollowArea>
           )}
-        </div>
+        </>
       ))}
     </Container>
   );
