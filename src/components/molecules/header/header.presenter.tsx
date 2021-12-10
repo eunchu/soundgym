@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
@@ -14,12 +14,17 @@ import Footer from "components/molecules/footer/footer";
 /**
  * Style >>>
  */
-const HeaderContainer = styled.header`
+interface HeaderContainerProps {
+  changeBg: boolean;
+}
+const HeaderContainer = styled.header<HeaderContainerProps>`
+  position: fixed;
+
   height: 70px;
   width: 100%;
 
-  background-color: #ffffff;
-  border-bottom: 1px solid #eeeeee;
+  background-color: ${(props) => (props.changeBg ? "#ffffff" : "#f3f9fd")};
+  /* border-bottom: 1px solid #eeeeee; */
 
   .container {
     max-width: 1223px;
@@ -196,6 +201,13 @@ const Header = ({
   isOpenMenu,
   onClickMenuOpen,
 }: HeaderProps) => {
+  /**
+   * >>> State
+   * @scrollY : 스크롤 시 y 값
+   */
+  const [scrollY, setScrollY] = useState<number>(0);
+  // <<< State
+
   // 로그인 했을 때 메뉴
   const loginMenuEl = useMemo(() => {
     return (
@@ -213,12 +225,24 @@ const Header = ({
     );
   }, []);
 
+  // 스크롤 시 header style 변경
+  const handleScroll = useCallback(() => {
+    console.log(window.scrollY);
+    setScrollY(window.scrollY);
+  }, []);
+  useEffect(() => {
+    window.addEventListener("scroll", () => handleScroll(), true);
+    return () =>
+      window.removeEventListener("scroll", () => handleScroll(), true);
+  }, [handleScroll]);
+  // <<<
+
   return (
     <>
-      <HeaderContainer>
+      <HeaderContainer changeBg={scrollY > 190}>
         <div className="container">
           {/* NOTE 로고 클릭 시 메인페이지로 이동합니다*/}
-          <Link to="/soundgym">
+          <Link to="/">
             <img src={Logo} alt="" onClick={() => onClickMenu({ menu: "" })} />
           </Link>
           {/* Desktop UI */}
