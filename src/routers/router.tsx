@@ -12,7 +12,7 @@ const RouterConfig = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/soundgym" element={<Header />}>
+        <Route path="soundgym" element={<Header />}>
           <Route index element={<MainPage />} />
           <Route path="community" element={<CommunityPage />} />
           <Route path="membership" element={<div>멤버십 페이지</div>} />
