@@ -32,6 +32,20 @@ import ImgChallengeTip1 from "assets/images/img-challenge-tip1.png";
 // Together imgs
 import ImgTogatherReview from "assets/images/img-together-review.png";
 import ImgTogatherChat from "assets/images/img-together-chat.png";
+// Shopping imgs
+import ImgShopping from "assets/images/img-shopping.png";
+// Story imgs
+import ImgStoryReview from "assets/images/img-story-review.svg";
+import ImgProfile_1 from "assets/images/img-profile-01.png";
+import ImgProfile_2 from "assets/images/img-profile-02.png";
+import ImgProfile_3 from "assets/images/img-profile-03.png";
+import ImgProfile_4 from "assets/images/img-profile-04.png";
+import ImgProfile_5 from "assets/images/img-profile-05.png";
+// Link imgs
+import ImgYoga from "assets/images/img-link-yoga.png";
+import ImgYoga_m from "assets/images/img-link-yoga-m.png";
+import IconAppleLogoWhite from "assets/images/ic-apple-logo-white.svg";
+import IconGoogleLogoWhite from "assets/images/ic-google-logo-white.svg";
 
 /**
  * Style >>>
@@ -356,7 +370,10 @@ const TogetherArea = styled.section`
       padding: 0 0 50px 40px;
 
       ${mediaQueries("mobile")`
+        flex-direction: column;
+
         margin-top: 42px;
+        padding: 0 0 40px 40px;
       `}
       p {
         font-family: "neo-bold";
@@ -366,6 +383,12 @@ const TogetherArea = styled.section`
         color: #38323c;
 
         padding-top: 60px;
+        ${mediaQueries("mobile")`
+          order: 2;
+          text-align: center;
+          padding-right: 40px;
+          font-size: 20px;
+        `}
         .pink {
           color: #e7c2ea;
         }
@@ -373,14 +396,26 @@ const TogetherArea = styled.section`
       .img-box {
         width: calc(50% + 20px);
         padding-right: 90px;
+        ${mediaQueries("mobile")`
+          order: 1;
+          width: 100%;
+          
+          padding-right: 40px;
+        `}
         img {
           width: 100%;
           max-width: 420px;
+          ${mediaQueries("mobile")`
+            max-width: 100%;
+          `}
         }
       }
     }
     .tip2 {
       display: flex;
+      ${mediaQueries("mobile")`
+        flex-direction: column;
+      `}
     }
   }
 `;
@@ -396,6 +431,14 @@ const ReviewBox = styled.div`
 
   padding: 50px 44px 35px 40px;
   margin-right: 20px;
+  ${mediaQueries("mobile")`
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 70px 0 42px 0;
+    margin-bottom: 16px;
+  `}
   p {
     display: flex;
     align-items: flex-start;
@@ -407,11 +450,25 @@ const ReviewBox = styled.div`
     color: #ffffff;
 
     margin-bottom: 57px;
+    ${mediaQueries("mobile")`
+      order: 2;
+      text-align: center;
+
+      font-size: 20px;
+      line-height: 29px;
+
+      margin-bottom: 0;
+      margin-top: 63px;
+    `}
   }
   .img-inner {
     display: flex;
     align-items: flex-end;
     justify-content: end;
+    ${mediaQueries("mobile")`
+      order: 1;
+      padding: 0 37px;
+    `}
     .img-box {
       max-width: 315px;
       img {
@@ -430,6 +487,16 @@ const ChatBox = styled.div`
 
   padding: 50px 0 103px 0;
   overflow: hidden;
+  ${mediaQueries("mobile")`
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 129px 0 51px 0;
+  `}
   p {
     display: flex;
     align-items: flex-start;
@@ -442,10 +509,293 @@ const ChatBox = styled.div`
 
     padding-left: 40px;
     margin-bottom: 97px;
+    ${mediaQueries("mobile")`
+      order: 2;
+      text-align: center;
+
+      font-size: 20px;
+
+      padding-left: 0;
+      margin-bottom: 0;
+      margin-top: 97px;
+    `}
   }
   img {
     width: calc(100% + 33px);
     margin-left: -13px;
+    ${mediaQueries("mobile")`
+      order: 1;
+      margin-left: 0;
+    `}
+  }
+`;
+// 득템하기
+const ShoppingArea = styled.section`
+  background-color: #f1f4f6;
+  padding: 160px 16px 180px 16px;
+  ${mediaQueries("mobile")`
+    padding: 80px 16px 100px 16px;    
+  `}
+  .inner {
+    max-width: 1166px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    ${mediaQueries("mobile")`
+      width: 100%;
+
+      flex-direction: column;
+      align-items: flex-start;      
+    `}
+    .left {
+      width: 50%;
+      margin-right: 60px;
+    }
+    .desc {
+      font-size: 28px;
+      line-height: 44px;
+      color: #a5aab4;
+
+      margin-top: 44px;
+      ${mediaQueries("mobile")`
+        font-size: 16px;
+        line-height: 24px;  
+
+        margin-top: 30px;
+      `}
+    }
+    .right {
+      width: 60%;
+      max-width: 630px;
+      img {
+        width: 100%;
+      }
+    }
+    .m-img {
+      width: 100%;
+      padding: 30px;
+    }
+  }
+`;
+// 회원들의 이야기
+const StoryArea = styled.section`
+  text-align: center;
+
+  background-color: #ffffff;
+  padding: 200px 16px 253px 16px;
+  ${mediaQueries("mobile")`
+    text-align: left;
+    padding: 62px 16px 60px 16px;
+  `}
+  h2 {
+    font-family: "neo-bold";
+    font-size: 50px;
+    line-height: 64px;
+
+    margin-bottom: 24px;
+    ${mediaQueries("mobile")`
+      font-size: 28px;
+      line-height: 40px;
+
+      margin-bottom: 14px;
+    `}
+  }
+  p.desc {
+    font-size: 30px;
+    line-height: 30px;
+    color: #a5aab4;
+
+    margin-bottom: 80px;
+    ${mediaQueries("mobile")`
+      width: 70%;
+      
+      font-size: 16px;
+      line-height: 24px;
+      
+      margin-bottom: 40px;
+    `}
+  }
+`;
+const StoryBoxContainer = styled.ul`
+  display: flex;
+  align-items: center;
+
+  margin-left: 22%;
+  overflow: hidden;
+  ${mediaQueries("mobile")`
+    margin-left: 0;
+  `}
+  li {
+    min-width: 330px;
+
+    text-align: left;
+    background: #f1f6f9;
+    border-radius: 20px;
+
+    margin-right: 20px;
+    padding: 50px 30px;
+    ${mediaQueries("mobile")`
+      min-width: 260px;
+
+      margin-right: 15px;
+      padding: 36px 23px 28px 23px;
+    `}
+    img {
+      margin-bottom: 16px;
+    }
+    p.title {
+      width: 74%;
+
+      font-family: "neo-bold";
+      font-size: 26px;
+      line-height: 34px;
+      color: #38323c;
+
+      margin-bottom: 14px;
+      ${mediaQueries("mobile")`
+        width: 64%;
+        font-size: 18px;
+        line-height: 140%;
+
+        margin-bottom: 10px;
+      `}
+    }
+    p.comment {
+      font-size: 20px;
+      line-height: 30px;
+      color: #606872;
+
+      margin-bottom: 60px;
+      ${mediaQueries("mobile")`
+        font-size: 16px;
+        line-height: 140%;
+
+        margin-bottom: 40px;
+      `}
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      img {
+        width: 50px;
+        height: 50px;
+
+        margin-bottom: 0;
+        margin-right: 10px;
+      }
+      .text {
+        .user {
+          font-family: "neo-bold";
+          font-size: 18px;
+          line-height: 22px;
+          color: #38323c;
+
+          margin-bottom: 3px;
+          ${mediaQueries("mobile")`
+            font-size: 16px;
+            line-height: 19px;
+
+            margin-bottom: 4px;
+          `}
+        }
+        .type {
+          font-size: 16px;
+          line-height: 19px;
+          color: #606872;
+        }
+      }
+    }
+  }
+`;
+// Link
+const LinkArea = styled.section`
+  background-color: #f1f4f6;
+  padding: 150px 16px 160px 16px;
+
+  ${mediaQueries("mobile")`
+    padding: 95px 0 100px 0;
+  `}
+  .inner {
+    max-width: 990px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    ${mediaQueries("mobile")`
+      flex-direction: column;
+    `}
+    .text-area {
+      width: 50%;
+      p.text {
+        font-family: "neo-bold";
+        font-size: 40px;
+        line-height: 140%;
+        color: #38323c;
+
+        margin-bottom: 40px;
+      }
+      .buttons {
+        display: flex;
+        align-items: center;
+      }
+    }
+    img.yoga {
+      width: 50%;
+    }
+    // mobile style
+    img.yoga-m {
+      width: 100%;
+
+      padding: 0 55px;
+      margin-bottom: 48px;
+    }
+    p.text-m {
+      text-align: center;
+      font-family: "neo-bold";
+      font-size: 24px;
+      line-height: 36px;
+      color: #38323c;
+
+      margin-bottom: 22px;
+    }
+    .download-btn-m {
+      background-color: #38323c;
+      border-radius: 8px;
+
+      font-family: "neo-bold";
+      font-size: 16px;
+      line-height: 19px;
+      color: #ffffff;
+
+      padding: 18px 30px;
+      cursor: pointer;
+    }
+  }
+`;
+const LinkButtonBlack = styled.div`
+  background-color: #38323c;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 18px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+  p {
+    font-family: "neo-bold";
+    font-size: 18px;
+    line-height: 22px;
+    color: #ffffff;
   }
 `;
 // 공통 스타일
@@ -477,7 +827,10 @@ const SubTitle = styled.h3`
 `;
 // <<< Style
 
-const MainPage = () => {
+interface MainPageProps {
+  storyList: {}[];
+}
+const MainPage = ({ storyList }: MainPageProps) => {
   // [Mobile/PC 공통UI]
   // 운동하기 > 카테고리 slider 영역 UI
   const categorySliderEl = useMemo(() => {
@@ -708,28 +1061,47 @@ const MainPage = () => {
             운동생활을 나누세요
           </SubTitle>
           <div className="tip1">
-            <p>
-              <span className="pink">운동 피플들은 이미</span>
-              <br />
-              운동생활과 유용한
-              <br />
-              꿀팁들을 빠르게
-              <br />
-              나누고 있어요
-            </p>
+            <Default>
+              <p>
+                <span className="pink">운동 피플들은 이미</span>
+                <br />
+                운동생활과 유용한
+                <br />
+                꿀팁들을 빠르게
+                <br />
+                나누고 있어요
+              </p>
+            </Default>
+            <Mobile>
+              <p>
+                <span className="pink">운동 피플들은 이미</span>
+                <br />
+                운동생활과 유용한 꿀팁들을
+                <br /> 빠르게 나누고 있어요
+              </p>
+            </Mobile>
             <div className="img-box">
               <img src={ImgChallengeTip1} alt="" />
             </div>
           </div>
           <div className="tip2">
             <ReviewBox>
-              <p>
-                사운드짐 꿀팁과
-                <br />
-                여러 챌린지 후기는
-                <br />
-                나누라고 있는 법
-              </p>
+              <Default>
+                <p>
+                  사운드짐 꿀팁과
+                  <br />
+                  여러 챌린지 후기는
+                  <br />
+                  나누라고 있는 법
+                </p>
+              </Default>
+              <Mobile>
+                <p>
+                  사운드짐 꿀팁과 여러 챌린지 후기는
+                  <br />
+                  나누라고 있는 법
+                </p>
+              </Mobile>
               <div className="img-inner">
                 <div className="img-box">
                   <img src={ImgTogatherReview} alt="" />
@@ -737,18 +1109,133 @@ const MainPage = () => {
               </div>
             </ReviewBox>
             <ChatBox>
-              <p>
-                내가 몰랐던
-                <br />
-                다양한 카테고리의
-                <br />
-                이야기를 나누고 있어요
-              </p>
+              <Default>
+                <p>
+                  내가 몰랐던
+                  <br />
+                  다양한 카테고리의
+                  <br />
+                  이야기를 나누고 있어요
+                </p>
+              </Default>
+              <Mobile>
+                <p>
+                  내가 몰랐던 다양한 카테고리의
+                  <br />
+                  이야기를 나누고 있어요
+                </p>
+              </Mobile>
               <img src={ImgTogatherChat} alt="" />
             </ChatBox>
           </div>
         </div>
       </TogetherArea>
+      {/* 득템하기 */}
+      <ShoppingArea>
+        <div className="inner">
+          <Default>
+            <div className="left">
+              <Title>득템하기</Title>
+              <SubTitle>
+                갖고 싶은 운동 용품,
+                <br />
+                먹고 싶은 건강 식품
+                <br />
+                어서 와서 사보세요
+              </SubTitle>
+              <p className="desc">
+                요가인의 필수품 매트부터
+                <br />
+                멋진 운동복까지
+                <br />
+                다양한 운동 제품을
+                <br />한 곳에서 만나보세요
+              </p>
+            </div>
+            <div className="right">
+              <img src={ImgShopping} alt="" />
+            </div>
+          </Default>
+          <Mobile>
+            <Title>득템하기</Title>
+            <SubTitle>
+              갖고 싶은 운동 용품,
+              <br />
+              먹고 싶은 건강 식품
+              <br />
+              어서 와서 사보세요
+            </SubTitle>
+            <img className="m-img" src={ImgShopping} alt="" />
+            <p className="desc">
+              요가인의 필수품 매트부터
+              <br />
+              멋진 운동복까지
+              <br />
+              다양한 운동 제품을
+              <br />한 곳에서 만나보세요
+            </p>
+          </Mobile>
+        </div>
+      </ShoppingArea>
+      {/* 회원들의 이야기 */}
+      <StoryArea>
+        <h2>사운드짐 회원들의 이야기</h2>
+        <p className="desc">
+          사운드짐 서비스를 이용한 회원들의 리얼 생생 후기를 들어보세요
+        </p>
+        <StoryBoxContainer>
+          {storyList?.map((item: any) => (
+            <li key={item.id}>
+              <img src={ImgStoryReview} alt="" />
+              <p className="title">{item.title}</p>
+              <p className="comment">{item.comment}</p>
+              <div className="user-info">
+                <img src={ImgProfile_1} alt="" />
+                <div className="text">
+                  <p className="user">
+                    {item.name[0]}OO - {item.age} {item.gender}
+                  </p>
+                  <p className="type">{item.type}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </StoryBoxContainer>
+      </StoryArea>
+      {/* Link */}
+      <LinkArea>
+        <div className="inner">
+          <Default>
+            <div className="text-area">
+              <p className="text">
+                온라인 코치와 함께,
+                <br /> 운동 친구들과 함께
+                <br /> 건강한 나를 만나세요!
+              </p>
+              <div className="buttons">
+                <LinkButtonBlack>
+                  <img src={IconAppleLogoWhite} alt="" />
+                  <p>App Store</p>
+                </LinkButtonBlack>
+                <LinkButtonBlack>
+                  <img src={IconGoogleLogoWhite} alt="" />
+                  <p>Google Play</p>
+                </LinkButtonBlack>
+              </div>
+            </div>
+            <img className="yoga" src={ImgYoga} alt="" />
+          </Default>
+          <Mobile>
+            <img className="yoga-m" src={ImgYoga_m} alt="" />
+            <p className="text-m">
+              온라인 코치와 함께,
+              <br /> 운동 친구들과 함께
+              <br /> 건강한 나를 만나세요!
+            </p>
+            <div className="download-btn-m">앱 다운로드</div>
+          </Mobile>
+        </div>
+      </LinkArea>
     </Container>
   );
 };

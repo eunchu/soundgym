@@ -6,7 +6,11 @@ import { Default, Mobile } from "utils";
 /**
  * Style >>>
  */
-const Container = styled.footer`
+interface ContainerProps {
+  bg: string;
+}
+const Container = styled.footer<ContainerProps>`
+  background-color: ${(props) => props.bg};
   border-top: 1px solid #c5c8ce;
   padding: 40px 0 60px;
   div.inner {
@@ -87,9 +91,12 @@ const Container = styled.footer`
 `;
 // <<< Style
 
-const Footer = () => {
+interface FooterProps {
+  theme: string;
+}
+const Footer = ({ theme }: FooterProps) => {
   return (
-    <Container>
+    <Container bg={theme === "dark" ? "#28323C" : "#F4F4F4"}>
       <div className="inner">
         <h3>사운드짐 이용 안내</h3>
         <ul>

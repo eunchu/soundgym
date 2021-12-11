@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import { Default, Mobile } from "utils";
@@ -237,6 +237,9 @@ const Header = ({
   }, [handleScroll]);
   // <<<
 
+  let location = useLocation();
+  const darkTheme = location && location.pathname === "/soundgym";
+
   return (
     <>
       <HeaderContainer changeBg={scrollY > 190}>
@@ -325,7 +328,8 @@ const Header = ({
         </div>
       </HeaderContainer>
       <Outlet />
-      <Footer />
+      {/* 메인페이지, 기업서비스 페이지일 경우 dark 테마 적용됩니다 */}
+      <Footer theme={darkTheme ? "dark" : "normal"} />
     </>
   );
 };
