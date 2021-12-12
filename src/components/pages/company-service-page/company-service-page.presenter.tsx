@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
 import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
+import { useScrollMove } from "hooks";
 
 // Visual imgs
 import ImgVisual from "assets/images/img-com-visual.png";
@@ -229,9 +231,11 @@ const ProgramBox = styled.div`
     `}
     li {
       min-width: 172px;
+      max-width: 172px;
       margin-right: 16px;
       ${mediaQueries("mobile")`
         min-width: 128px;
+        max-width: 128px;
         margin-right: 11px;
       `}
       img {
@@ -758,13 +762,23 @@ const SubTitle = styled.h3`
 // <<< Style
 
 const CompanyServicePage = () => {
+  // 모바일 사이즈
+  const MobileSize = useMediaQuery({ query: "(max-width: 767px)" });
+
+  // 기업 맞춤 콘텐츠 > 롤링 animation
+  const animatedItem = useScrollMove({
+    x: MobileSize ? -340 : -450,
+    duration: 3, // 속도 변경 가능합니다
+    delay: 0,
+  });
+
   // [Mobile/PC 공통UI]
   // 기업 맞춤 콘텐츠 > slider 영역 UI
   const programSliderEl = useMemo(() => {
     const imgs = [ImgProgram01, ImgProgram02, ImgProgram03, ImgProgram04];
     return (
       <ProgramBox>
-        <ul>
+        <ul {...animatedItem}>
           {imgs.map((img, i) => (
             <li key={i}>
               <img src={img} alt="" />
@@ -781,7 +795,7 @@ const CompanyServicePage = () => {
         </p>
       </ProgramBox>
     );
-  }, []);
+  }, [animatedItem]);
 
   return (
     <Container>
