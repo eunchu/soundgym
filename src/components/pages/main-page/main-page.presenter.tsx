@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
 import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
+import { useScrollMove } from "hooks";
 
 // Visual imgs
 import IconAppleLogo from "assets/images/ic-apple-logo.svg";
@@ -37,10 +39,10 @@ import ImgShopping from "assets/images/img-shopping.png";
 // Story imgs
 import ImgStoryReview from "assets/images/img-story-review.svg";
 import ImgProfile_1 from "assets/images/img-profile-01.png";
-import ImgProfile_2 from "assets/images/img-profile-02.png";
-import ImgProfile_3 from "assets/images/img-profile-03.png";
-import ImgProfile_4 from "assets/images/img-profile-04.png";
-import ImgProfile_5 from "assets/images/img-profile-05.png";
+// import ImgProfile_2 from "assets/images/img-profile-02.png";
+// import ImgProfile_3 from "assets/images/img-profile-03.png";
+// import ImgProfile_4 from "assets/images/img-profile-04.png";
+// import ImgProfile_5 from "assets/images/img-profile-05.png";
 // Link imgs
 import ImgYoga from "assets/images/img-link-yoga.png";
 import ImgYoga_m from "assets/images/img-link-yoga-m.png";
@@ -263,19 +265,17 @@ const CategoryBox = styled.div`
     padding: 60px 0 30px 30px;
   `}
   ul {
-    /* TODO 이미지 2개씩만 보이도록? 수정해야 함 */
-    width: 2236px;
-
     display: flex;
     align-items: center;
 
-    margin-left: 50px;
+    padding-left: 50px;
+    overflow: hidden;
     li {
-      /* min-width: 172px; */
+      min-width: 172px;
       margin-right: 20px;
 
       ${mediaQueries("mobile")`
-        // min-width: 127px;
+        min-width: 127px;
         margin-right: 12px;
       `}
       img {
@@ -315,13 +315,13 @@ const ChallengeArea = styled.section`
       display: block;
     `}
     img {
-      /* max-width: 500px; */
       max-width: 50%;
       margin-right: 56px;
 
       ${mediaQueries("mobile")`
         max-width: 100%;
         margin-top: 50px;
+        margin-right: 0;
       `}
     }
     p.desc {
@@ -831,6 +831,16 @@ interface MainPageProps {
   storyList: {}[];
 }
 const MainPage = ({ storyList }: MainPageProps) => {
+  // 모바일 사이즈
+  const MobileSize = useMediaQuery({ query: "(max-width: 767px)" });
+
+  // 운동하기 > 롤링 animation
+  const animatedItem = useScrollMove({
+    x: MobileSize ? -340 : -450,
+    duration: 3, // 속도 변경 가능합니다
+    delay: 0,
+  });
+
   // [Mobile/PC 공통UI]
   // 운동하기 > 카테고리 slider 영역 UI
   const categorySliderEl = useMemo(() => {
@@ -851,7 +861,7 @@ const MainPage = ({ storyList }: MainPageProps) => {
     ];
     return (
       <CategoryBox>
-        <ul>
+        <ul {...animatedItem}>
           {imgs.map((img, i) => (
             <li key={i}>
               <img src={img} alt="" />
@@ -865,7 +875,7 @@ const MainPage = ({ storyList }: MainPageProps) => {
         </p>
       </CategoryBox>
     );
-  }, []);
+  }, [animatedItem]);
 
   return (
     <Container>

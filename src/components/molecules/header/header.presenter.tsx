@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
 import { Default, Mobile } from "utils";
 
@@ -18,7 +19,7 @@ import Footer from "components/molecules/footer/footer";
  */
 interface HeaderContainerProps {
   bg: string;
-  changeBg: boolean;
+  borderColor: string;
 }
 const HeaderContainer = styled.header<HeaderContainerProps>`
   position: fixed;
@@ -27,10 +28,7 @@ const HeaderContainer = styled.header<HeaderContainerProps>`
   width: 100%;
 
   background-color: ${(props) => props.bg};
-  /* background-color: ${(props) =>
-    props.changeBg ? "#ffffff" : "#f3f9fd"}; */
-  /* border-bottom: 1px solid #eeeeee; */
-
+  border-bottom: ${(props) => `1px solid ${props.borderColor}`};
   .container {
     max-width: 1223px;
     height: inherit;
@@ -252,8 +250,8 @@ const Header = ({
 
   // 스크롤 시 header style 변경
   const handleScroll = useCallback(() => {
-    console.log(window.scrollY);
     setScrollY(window.scrollY);
+    console.log(window.scrollY);
   }, []);
   useEffect(() => {
     window.addEventListener("scroll", () => handleScroll(), true);
@@ -268,11 +266,50 @@ const Header = ({
     location && ["/soundgym", "/soundgym/service"].includes(location.pathname);
   const haderDarkTheme = location && location.pathname === "/soundgym/service";
 
-  const bg = haderDarkTheme ? "#1D293D" : "translate";
+  // 모바일 사이즈
+  const MobileSize = useMediaQuery({ query: "(max-width: 767px)" });
+
+  // header 배경색
+  const bg = useMemo(() => {
+    let bg =
+      location.pathname === "/soundgym/service"
+        ? "#1D293D"
+        : location.pathname === "/soundgym"
+        ? "#f3f9fd"
+        : "#ffffff";
+    if (!MobileSize && scrollY >= 190 && location.pathname === "/soundgym")
+      bg = "#ffffff";
+    if (MobileSize && scrollY >= 112 && location.pathname === "/soundgym")
+      bg = "#ffffff";
+    if (
+      !MobileSize &&
+      scrollY > 190 &&
+      location.pathname === "/soundgym/service"
+    )
+      bg = "#171B1C";
+    if (
+      MobileSize &&
+      scrollY > 112 &&
+      location.pathname === "/soundgym/service"
+    )
+      bg = "#171B1C";
+
+    return bg;
+  }, [MobileSize, location.pathname, scrollY]);
+  // header border
+  const borderColor = useMemo(() => {
+    let color = "translate";
+
+    if (scrollY >= 190 && location.pathname === "/soundgym") color = "#EEEEEE";
+    if (scrollY >= 190 && location.pathname === "/soundgym/service")
+      color = "#41474C";
+
+    return color;
+  }, [location.pathname, scrollY]);
 
   return (
     <>
-      <HeaderContainer changeBg={scrollY > 190} bg={bg}>
+      <HeaderContainer bg={bg} borderColor={borderColor}>
         <div className="container">
           {/* NOTE 로고 클릭 시 메인페이지로 이동합니다*/}
           <Link to="/soundgym">

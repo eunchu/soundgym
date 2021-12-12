@@ -48,7 +48,7 @@ import ImgAdmins_m from "assets/images/img-admins-m.png";
  * Style >>>
  */
 const Container = styled.div`
-  margin-top: 70px;
+  padding-top: 70px;
 `;
 // Visual
 const VisualArea = styled.section`

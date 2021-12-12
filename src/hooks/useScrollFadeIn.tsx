@@ -9,7 +9,7 @@ export const useScrollMove = ({ x = 450, duration = 1, delay = 0 }) => {
       if (current && entry.isIntersecting) {
         current.style.transitionProperty = "all";
         current.style.transitionDuration = `${duration}s`;
-        current.style.marginLeft = `${x}px`;
+        current.style.marginLeft = `${x}px !important`;
         current.style.transitionDelay = `${delay}s`;
       }
     },
