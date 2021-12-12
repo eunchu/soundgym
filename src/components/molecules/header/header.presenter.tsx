@@ -5,7 +5,9 @@ import styled from "styled-components";
 import { Default, Mobile } from "utils";
 
 import Logo from "assets/images/logo.png";
+import LogoWhite from "assets/images/logo-white.png";
 import IconNav from "assets/images/ic-nav.png";
+import IconNavWhite from "assets/images/ic-nav-white.png";
 import ImgProfile from "assets/images/img-profile.png";
 import IconArrow from "assets/images/ic-arrow.png";
 
@@ -15,6 +17,7 @@ import Footer from "components/molecules/footer/footer";
  * Style >>>
  */
 interface HeaderContainerProps {
+  bg: string;
   changeBg: boolean;
 }
 const HeaderContainer = styled.header<HeaderContainerProps>`
@@ -23,7 +26,9 @@ const HeaderContainer = styled.header<HeaderContainerProps>`
   height: 70px;
   width: 100%;
 
-  background-color: ${(props) => (props.changeBg ? "#ffffff" : "#f3f9fd")};
+  background-color: ${(props) => props.bg};
+  /* background-color: ${(props) =>
+    props.changeBg ? "#ffffff" : "#f3f9fd"}; */
   /* border-bottom: 1px solid #eeeeee; */
 
   .container {
@@ -53,6 +58,7 @@ const Navi = styled.nav`
 `;
 interface NavProps {
   active: boolean;
+  darkTheme: boolean;
 }
 const Nav = styled.li<NavProps>`
   height: 48px;
@@ -61,7 +67,7 @@ const Nav = styled.li<NavProps>`
   align-items: center;
 
   font-family: ${(props) => (props.active ? "neo-bold" : "neo-regular")};
-  color: #606872;
+  color: ${(props) => (props.darkTheme ? "#F7F8F9" : "#606872")};
   line-height: 22px;
 
   padding: 0 16px;
@@ -75,6 +81,25 @@ const Nav = styled.li<NavProps>`
 const ButtonArea = styled.div`
   display: flex;
   align-items: center;
+`;
+const AdminBtn = styled.div`
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "neo-bold";
+  font-size: 14px;
+  line-height: 22px;
+  color: #f7f8f9;
+
+  border: 1px solid #d8e6fe;
+  border-radius: 4px;
+
+  padding: 0 20px;
+  margin-right: 20px;
+  cursor: pointer;
 `;
 const CouponBtn = styled.div`
   width: 80px;
@@ -237,16 +262,25 @@ const Header = ({
   }, [handleScroll]);
   // <<<
 
-  let location = useLocation();
-  const darkTheme = location && location.pathname === "/soundgym";
+  // theme
+  const location = useLocation();
+  const footerDarkTheme =
+    location && ["/soundgym", "/soundgym/service"].includes(location.pathname);
+  const haderDarkTheme = location && location.pathname === "/soundgym/service";
+
+  const bg = haderDarkTheme ? "#1D293D" : "translate";
 
   return (
     <>
-      <HeaderContainer changeBg={scrollY > 190}>
+      <HeaderContainer changeBg={scrollY > 190} bg={bg}>
         <div className="container">
           {/* NOTE 로고 클릭 시 메인페이지로 이동합니다*/}
-          <Link to="/">
-            <img src={Logo} alt="" onClick={() => onClickMenu({ menu: "" })} />
+          <Link to="/soundgym">
+            <img
+              src={haderDarkTheme ? LogoWhite : Logo}
+              alt=""
+              onClick={() => onClickMenu({ menu: "" })}
+            />
           </Link>
           {/* Desktop UI */}
           <Default>
@@ -254,6 +288,7 @@ const Header = ({
               <ul>
                 <Link to="membership">
                   <Nav
+                    darkTheme={haderDarkTheme}
                     active={activePage === "멤버십"}
                     onClick={() => onClickMenu({ menu: "멤버십" })}
                   >
@@ -262,6 +297,7 @@ const Header = ({
                 </Link>
                 <Link to="community">
                   <Nav
+                    darkTheme={haderDarkTheme}
                     active={activePage === "커뮤니티"}
                     onClick={() => onClickMenu({ menu: "커뮤니티" })}
                   >
@@ -270,6 +306,7 @@ const Header = ({
                 </Link>
                 <Link to="service">
                   <Nav
+                    darkTheme={haderDarkTheme}
                     active={activePage === "기업 서비스"}
                     onClick={() => onClickMenu({ menu: "기업 서비스" })}
                   >
@@ -279,7 +316,11 @@ const Header = ({
               </ul>
             </Navi>
             <ButtonArea>
-              <CouponBtn>쿠폰등록</CouponBtn>
+              {haderDarkTheme ? (
+                <AdminBtn>관리자시스템</AdminBtn>
+              ) : (
+                <CouponBtn>쿠폰등록</CouponBtn>
+              )}
               {isLogin ? (
                 <ProfileArea>
                   <Link to="mypage">
@@ -303,7 +344,7 @@ const Header = ({
           {/* Mobile UI */}
           <Mobile>
             <MobileNavi onClick={() => onClickMenuOpen()}>
-              <img src={IconNav} alt="" />
+              <img src={haderDarkTheme ? IconNavWhite : IconNav} alt="" />
               {isOpenMenu && (
                 <MenuContainer top={60}>
                   {isLogin ? (
@@ -329,7 +370,7 @@ const Header = ({
       </HeaderContainer>
       <Outlet />
       {/* 메인페이지, 기업서비스 페이지일 경우 dark 테마 적용됩니다 */}
-      <Footer theme={darkTheme ? "dark" : "normal"} />
+      <Footer theme={footerDarkTheme ? "dark" : "normal"} />
     </>
   );
 };

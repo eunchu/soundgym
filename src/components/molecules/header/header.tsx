@@ -14,7 +14,7 @@ const Header = () => {
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   // setIsLogin 사용 시 아래 eslint 삭제해주세요
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   // <<< State
 
   // 메뉴 클릭 시 상태 변경 & Desktop 메뉴 active 스타일 변경
