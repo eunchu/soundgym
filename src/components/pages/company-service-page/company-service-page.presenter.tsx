@@ -447,6 +447,9 @@ const ManagementArea = styled.section`
     `}
     .margin {
       margin-left: 22.5%;
+      ${mediaQueries("mobile")`
+        margin-left: 0;
+      `}
     }
     p.desc {
       font-size: 28px;
@@ -564,7 +567,7 @@ const StoryArea = styled.section`
   background-color: #000000;
   padding: 200px 16px;
   ${mediaQueries("mobile")`
-    padding: 60px 16px 0 16px;
+    padding: 60px 0 0 16px;
   `}
   .inner {
     text-align: center;
@@ -1148,7 +1151,15 @@ const CompanyServicePage = () => {
             </ul>
           </Default>
           <Mobile>
-            <Swiper slidesPerView={1.3} spaceBetween={16}>
+            <Swiper
+              slidesPerView={1.3}
+              spaceBetween={16}
+              on={{
+                touchMove: (swiper) => {
+                  console.log("1", swiper);
+                },
+              }}
+            >
               <SwiperSlide>
                 <StoryBox>
                   <div className="top">

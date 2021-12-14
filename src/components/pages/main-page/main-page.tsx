@@ -5,7 +5,7 @@ import MainPagePresenter from "./main-page.presenter";
 
 const MainPage = () => {
   const { storyList } = useMemo(() => {
-    const storyList = Array.from(Array(10)).map((item, i) => ({
+    const storyList = Array.from(Array(4)).map((item, i) => ({
       id: i,
       title: "활용도 200%의 운동 어플리케이션",
       comment:

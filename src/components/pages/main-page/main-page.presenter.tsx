@@ -284,7 +284,6 @@ const CategoryBox = styled.div`
 
     overflow: hidden;
     .slider-box {
-      /* min-width: 172px; */
       img {
         width: 100%;
       }
