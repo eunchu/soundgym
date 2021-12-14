@@ -29,6 +29,7 @@ const HeaderContainer = styled.header<HeaderContainerProps>`
 
   background-color: ${(props) => props.bg};
   border-bottom: ${(props) => `1px solid ${props.borderColor}`};
+  z-index: 20;
   .container {
     max-width: 1223px;
     height: inherit;
@@ -48,10 +49,17 @@ const HeaderContainer = styled.header<HeaderContainerProps>`
     cursor: pointer;
   }
 `;
-const Navi = styled.nav`
+const Box = styled.div`
+  height: 70px;
+`;
+interface NaviProps {
+  servicePage: boolean;
+}
+const Navi = styled.nav<NaviProps>`
   ul {
     display: flex;
     align-items: center;
+    margin-right: ${(props) => props.servicePage && "-39px"};
   }
 `;
 interface NavProps {
@@ -153,11 +161,25 @@ const ProfileArea = styled.div`
 const MobileNavi = styled.nav`
   position: relative;
 
-  width: 24px;
-  height: 24px;
+  display: flex;
+  align-items: center;
+
   img {
-    width: 100%;
+    width: 24px;
+    height: 24px;
   }
+`;
+const DownloadBtn = styled.div`
+  font-family: "neo-bold";
+  font-size: 12px;
+  line-height: 14px;
+  color: #ffffff;
+
+  background-color: #3d84fb;
+  border-radius: 100px;
+
+  padding: 9px 12px;
+  margin-right: 20px;
 `;
 interface MenuContainerProps {
   top: number;
@@ -251,7 +273,6 @@ const Header = ({
   // 스크롤 시 header style 변경
   const handleScroll = useCallback(() => {
     setScrollY(window.scrollY);
-    console.log(window.scrollY);
   }, []);
   useEffect(() => {
     window.addEventListener("scroll", () => handleScroll(), true);
@@ -269,43 +290,27 @@ const Header = ({
   // 모바일 사이즈
   const MobileSize = useMediaQuery({ query: "(max-width: 767px)" });
 
+  const mainPage = ["/soundgym", "/soundgym/"].includes(location.pathname);
+  const servicePage = location.pathname === "/soundgym/service";
   // header 배경색
   const bg = useMemo(() => {
-    let bg =
-      location.pathname === "/soundgym/service"
-        ? "#1D293D"
-        : location.pathname === "/soundgym"
-        ? "#f3f9fd"
-        : "#ffffff";
-    if (!MobileSize && scrollY >= 190 && location.pathname === "/soundgym")
-      bg = "#ffffff";
-    if (MobileSize && scrollY >= 112 && location.pathname === "/soundgym")
-      bg = "#ffffff";
-    if (
-      !MobileSize &&
-      scrollY > 190 &&
-      location.pathname === "/soundgym/service"
-    )
-      bg = "#171B1C";
-    if (
-      MobileSize &&
-      scrollY > 112 &&
-      location.pathname === "/soundgym/service"
-    )
-      bg = "#171B1C";
+    let bg = servicePage ? "#1D293D" : mainPage ? "#f3f9fd" : "#ffffff";
+    if (!MobileSize && scrollY >= 190 && mainPage) bg = "#ffffff";
+    if (MobileSize && scrollY >= 112 && mainPage) bg = "#ffffff";
+    if (!MobileSize && scrollY > 190 && servicePage) bg = "#171B1C";
+    if (MobileSize && scrollY > 112 && servicePage) bg = "#171B1C";
 
     return bg;
-  }, [MobileSize, location.pathname, scrollY]);
+  }, [MobileSize, mainPage, scrollY, servicePage]);
   // header border
   const borderColor = useMemo(() => {
     let color = "translate";
 
-    if (scrollY >= 190 && location.pathname === "/soundgym") color = "#EEEEEE";
-    if (scrollY >= 190 && location.pathname === "/soundgym/service")
-      color = "#41474C";
+    if (scrollY >= 190 && mainPage) color = "#EEEEEE";
+    if (scrollY >= 190 && servicePage) color = "#41474C";
 
     return color;
-  }, [location.pathname, scrollY]);
+  }, [mainPage, scrollY, servicePage]);
 
   return (
     <>
@@ -321,7 +326,7 @@ const Header = ({
           </Link>
           {/* Desktop UI */}
           <Default>
-            <Navi>
+            <Navi servicePage={servicePage}>
               <ul>
                 <Link to="membership">
                   <Nav
@@ -381,6 +386,7 @@ const Header = ({
           {/* Mobile UI */}
           <Mobile>
             <MobileNavi onClick={() => onClickMenuOpen()}>
+              {scrollY >= 320 && <DownloadBtn>앱 다운로드</DownloadBtn>}
               <img src={haderDarkTheme ? IconNavWhite : IconNav} alt="" />
               {isOpenMenu && (
                 <MenuContainer top={60}>
@@ -405,6 +411,7 @@ const Header = ({
           </Mobile>
         </div>
       </HeaderContainer>
+      <Box />
       <Outlet />
       {/* 메인페이지, 기업서비스 페이지일 경우 dark 테마 적용됩니다 */}
       <Footer theme={footerDarkTheme ? "dark" : "normal"} />

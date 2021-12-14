@@ -6,6 +6,18 @@ import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
 import { useScrollMove } from "hooks";
 
+import SwiperCore, {
+  Navigation,
+  Pagination,
+  EffectFade,
+  Autoplay,
+} from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
+import "swiper/swiper.scss";
+import "swiper/modules/navigation/navigation.scss";
+import "swiper/modules/pagination/pagination.scss";
+import "swiper/modules/effect-fade/effect-fade.scss";
+
 // Visual imgs
 import ImgVisual from "assets/images/img-com-visual.png";
 import ImgVisual_m from "assets/images/img-com-visual-m.png";
@@ -44,16 +56,17 @@ import ImgWelfare_m from "assets/images/img-welfare-bg-m.png";
 import ImgAdmins from "assets/images/img-admins.png";
 import ImgAdmins_m from "assets/images/img-admins-m.png";
 
+// Swiper modules
+SwiperCore.use([Pagination, Navigation, EffectFade, Autoplay]);
+
 /**
  * Style >>>
  */
-const Container = styled.div`
-  padding-top: 70px;
-`;
+const Container = styled.div``;
 // Visual
 const VisualArea = styled.section`
   background: linear-gradient(0deg, #1d293d, #1d293d);
-  padding: 119px 16px 111px 16px;
+  padding: 120px 16px 111px 16px;
 
   ${mediaQueries("mobile")`
     padding: 42px 16px 76px 16px;
@@ -429,11 +442,12 @@ const ManagementArea = styled.section`
     padding: 60px 16px;
   `}
   .inner {
-    margin-left: 22%;
     ${mediaQueries("mobile")`
       margin-left: 0;
     `}
-
+    .margin {
+      margin-left: 22.5%;
+    }
     p.desc {
       font-size: 28px;
       line-height: 44px;
@@ -456,9 +470,6 @@ const ManagementArea = styled.section`
         flex-direction: column;
       `}
       li {
-        min-width: 886px;
-
-        margin-right: 20px;
         ${mediaQueries("mobile")`
           min-width: 100%;
           width: 100%;
@@ -612,13 +623,11 @@ const StoryBox = styled.li`
   padding: 46px 32px 50px 32px;
   margin-right: 20px;
   ${mediaQueries("mobile")`
-    width: 260px;
-    min-width: 260px;
+    width: 100%;
     min-height: 407px;
-    max-height: 407px;
+    height: 407px;
     
     padding: 40px 24px 28px 24px;
-    margin-right: 16px;
   `}
   &:last-child {
     margin-right: 0;
@@ -963,13 +972,13 @@ const CompanyServicePage = () => {
       {/* 관리 시스템 제공 */}
       <ManagementArea>
         <div className="inner">
-          <Title>관리 시스템 제공</Title>
-          <SubTitle>
+          <Title className="margin">관리 시스템 제공</Title>
+          <SubTitle className="margin">
             이용내역과 임직원 현황을
             <br />
             쉽게 확인하고 관리하세요
           </SubTitle>
-          <p className="desc">
+          <p className="desc margin">
             별도의 추가 비용없이
             <Mobile>
               <br />
@@ -978,18 +987,30 @@ const CompanyServicePage = () => {
           </p>
           <Default>
             <ul>
-              <li>
-                <img src={ImgDashboard01} alt="" />
-                <p>기업관리 시스템_대시보드</p>
-              </li>
-              <li>
-                <img src={ImgDashboard02} alt="" />
-                <p>기업관리 시스템_임직원 리스트</p>
-              </li>
-              <li>
-                <img src={ImgDashboard03} alt="" />
-                <p>기업관리 시스템_임직원 상세</p>
-              </li>
+              <Swiper
+                slidesPerView={1.8}
+                centeredSlides={true}
+                spaceBetween={20}
+              >
+                <SwiperSlide>
+                  <li>
+                    <img src={ImgDashboard01} alt="" />
+                    <p>기업관리 시스템_대시보드</p>
+                  </li>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <li>
+                    <img src={ImgDashboard02} alt="" />
+                    <p>기업관리 시스템_임직원 리스트</p>
+                  </li>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <li>
+                    <img src={ImgDashboard03} alt="" />
+                    <p>기업관리 시스템_임직원 상세</p>
+                  </li>
+                </SwiperSlide>
+              </Swiper>
             </ul>
           </Default>
           <Mobile>
@@ -1126,84 +1147,90 @@ const CompanyServicePage = () => {
               </StoryBox>
             </ul>
           </Default>
-          {/* slider */}
           <Mobile>
-            <ul>
-              <StoryBox>
-                <div className="top">
-                  <img className="img-review" src={ImgStoryReview} alt="" />
-                  <div className="text">
-                    운동 종류가 다양하고 할 수<br /> 있는게 많아서 임직원분들이
-                    <br />
-                    좋아했습니다.
+            <Swiper slidesPerView={1.3} spaceBetween={16}>
+              <SwiperSlide>
+                <StoryBox>
+                  <div className="top">
+                    <img className="img-review" src={ImgStoryReview} alt="" />
+                    <div className="text">
+                      운동 종류가 다양하고 할 수<br /> 있는게 많아서
+                      임직원분들이
+                      <br />
+                      좋아했습니다.
+                    </div>
+                    <div className="text">
+                      이전에 이용하던 복지 프로그램
+                      <br />
+                      보다 적은 비용으로 복지혜택을
+                      <br /> 제공할 수 있는 점이 장점인 것<br />
+                      같습니다.
+                    </div>
                   </div>
-                  <div className="text">
-                    이전에 이용하던 복지 프로그램
-                    <br />
-                    보다 적은 비용으로 복지혜택을
-                    <br /> 제공할 수 있는 점이 장점인 것<br />
-                    같습니다.
+                  <div className="bottom">
+                    <img src={ImgProfile_1} alt="" />
+                    <div className="user-info">
+                      <p className="user">윤OO - 30대</p>
+                      <p className="info">S기업 관리자</p>
+                    </div>
                   </div>
-                </div>
-                <div className="bottom">
-                  <img src={ImgProfile_1} alt="" />
-                  <div className="user-info">
-                    <p className="user">윤OO - 30대</p>
-                    <p className="info">S기업 관리자</p>
+                </StoryBox>
+              </SwiperSlide>
+              <SwiperSlide>
+                <StoryBox>
+                  <div className="top">
+                    <img className="img-review" src={ImgStoryReview} alt="" />
+                    <div className="text">
+                      PT 코치님이 바로 옆에서
+                      <br /> 알려 주는 것 같아 다른 운동
+                      <br /> 앱보다 쉽게 운동할 수 있었어요.
+                    </div>
+                    <div className="text">
+                      스트레칭, 명상까지 다양한 프로
+                      <br />
+                      그램이 많아 집에서 하기 좋아요.
+                    </div>
+                    <div className="text">
+                      30대에 접어드니 체력이 많이
+                      <br /> 부족했는데, 조금씩 조금씩
+                      <br /> 나아지는 것 같아요.
+                    </div>
                   </div>
-                </div>
-              </StoryBox>
-              <StoryBox>
-                <div className="top">
-                  <img className="img-review" src={ImgStoryReview} alt="" />
-                  <div className="text">
-                    PT 코치님이 바로 옆에서
-                    <br /> 알려 주는 것 같아 다른 운동
-                    <br /> 앱보다 쉽게 운동할 수 있었어요.
+                  <div className="bottom">
+                    <img src={ImgProfile_2} alt="" />
+                    <div className="user-info">
+                      <p className="user">이OO - 30대</p>
+                      <p className="info">G기업 임직원</p>
+                    </div>
                   </div>
-                  <div className="text">
-                    스트레칭, 명상까지 다양한 프로
-                    <br />
-                    그램이 많아 집에서 하기 좋아요.
+                </StoryBox>
+              </SwiperSlide>
+              <SwiperSlide>
+                <StoryBox>
+                  <div className="top">
+                    <img className="img-review" src={ImgStoryReview} alt="" />
+                    <div className="text">
+                      의지 박약타입인데, 운동 선생님
+                      <br />
+                      들이 짜준 프로그램에 맞춰서
+                      <br /> 하니깐 따라갈 수 있었어요.
+                    </div>
+                    <div className="text">
+                      코로나때문에 실내자전거를 타<br />게 됐는데, 사운드짐 앱에
+                      <br />
+                      집중 하고 타니 좋았어요.
+                    </div>
                   </div>
-                  <div className="text">
-                    30대에 접어드니 체력이 많이
-                    <br /> 부족했는데, 조금씩 조금씩
-                    <br /> 나아지는 것 같아요.
+                  <div className="bottom">
+                    <img src={ImgProfile_3} alt="" />
+                    <div className="user-info">
+                      <p className="user">김OO - 40대</p>
+                      <p className="info">K기관 임직원</p>
+                    </div>
                   </div>
-                </div>
-                <div className="bottom">
-                  <img src={ImgProfile_2} alt="" />
-                  <div className="user-info">
-                    <p className="user">이OO - 30대</p>
-                    <p className="info">G기업 임직원</p>
-                  </div>
-                </div>
-              </StoryBox>
-              <StoryBox>
-                <div className="top">
-                  <img className="img-review" src={ImgStoryReview} alt="" />
-                  <div className="text">
-                    의지 박약타입인데, 운동 선생님
-                    <br />
-                    들이 짜준 프로그램에 맞춰서
-                    <br /> 하니깐 따라갈 수 있었어요.
-                  </div>
-                  <div className="text">
-                    코로나때문에 실내자전거를 타<br />게 됐는데, 사운드짐 앱에
-                    <br />
-                    집중 하고 타니 좋았어요.
-                  </div>
-                </div>
-                <div className="bottom">
-                  <img src={ImgProfile_3} alt="" />
-                  <div className="user-info">
-                    <p className="user">김OO - 40대</p>
-                    <p className="info">K기관 임직원</p>
-                  </div>
-                </div>
-              </StoryBox>
-            </ul>
+                </StoryBox>
+              </SwiperSlide>
+            </Swiper>
           </Mobile>
         </div>
       </StoryArea>

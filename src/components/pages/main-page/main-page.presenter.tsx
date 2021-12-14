@@ -1,6 +1,18 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+
+import SwiperCore, {
+  Navigation,
+  Pagination,
+  EffectFade,
+  Autoplay,
+} from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
+import "swiper/swiper.scss";
+import "swiper/modules/navigation/navigation.scss";
+import "swiper/modules/pagination/pagination.scss";
+import "swiper/modules/effect-fade/effect-fade.scss";
 
 import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
@@ -49,6 +61,9 @@ import ImgYoga_m from "assets/images/img-link-yoga-m.png";
 import IconAppleLogoWhite from "assets/images/ic-apple-logo-white.svg";
 import IconGoogleLogoWhite from "assets/images/ic-google-logo-white.svg";
 
+// Swiper modules
+SwiperCore.use([Pagination, Navigation, EffectFade, Autoplay]);
+
 /**
  * Style >>>
  */
@@ -59,7 +74,7 @@ const VisualArea = styled.section`
   width: 100%;
 
   background-color: #f3f9fd;
-  padding: 190px 16px 110px 16px;
+  padding: 120px 16px 110px 16px;
 
   ${mediaQueries("mobile")`
     padding: 112px 0 60px 0;
@@ -258,26 +273,18 @@ const CategoryBox = styled.div`
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.03);
   border-radius: 24px;
 
-  padding: 147px 0 60px 50px;
+  padding: 147px 0 60px 0;
   overflow: hidden;
-
   ${mediaQueries("mobile")`
-    padding: 60px 0 30px 30px;
+    padding: 60px 0 30px 0;
   `}
-  ul {
+  .category-swiper {
     display: flex;
     align-items: center;
 
-    padding-left: 50px;
     overflow: hidden;
-    li {
-      min-width: 172px;
-      margin-right: 20px;
-
-      ${mediaQueries("mobile")`
-        min-width: 127px;
-        margin-right: 12px;
-      `}
+    .slider-box {
+      /* min-width: 172px; */
       img {
         width: 100%;
       }
@@ -290,6 +297,7 @@ const CategoryBox = styled.div`
     color: #ffffff;
 
     margin-top: 125px;
+    padding-left: 50px;
     ${mediaQueries("mobile")`
       font-size: 20px;
       line-height: 140%;
@@ -537,7 +545,7 @@ const ShoppingArea = styled.section`
     padding: 80px 16px 100px 16px;    
   `}
   .inner {
-    max-width: 1166px;
+    max-width: 1000px;
     margin: auto;
 
     display: flex;
@@ -584,10 +592,10 @@ const StoryArea = styled.section`
   text-align: center;
 
   background-color: #ffffff;
-  padding: 200px 16px 253px 16px;
+  padding: 200px 0 253px 0;
   ${mediaQueries("mobile")`
     text-align: left;
-    padding: 62px 16px 60px 16px;
+    padding: 62px 0 60px 16px;
   `}
   h2 {
     font-family: "neo-bold";
@@ -622,24 +630,22 @@ const StoryBoxContainer = styled.ul`
   display: flex;
   align-items: center;
 
-  margin-left: 22%;
   overflow: hidden;
   ${mediaQueries("mobile")`
     margin-left: 0;
   `}
-  li {
+  .swiper-box {
     min-width: 330px;
+    /* max-width: 330px; */
 
     text-align: left;
     background: #f1f6f9;
     border-radius: 20px;
 
-    margin-right: 20px;
     padding: 50px 30px;
     ${mediaQueries("mobile")`
       min-width: 260px;
 
-      margin-right: 15px;
       padding: 36px 23px 28px 23px;
     `}
     img {
@@ -816,7 +822,6 @@ const Title = styled.h2`
 `;
 const SubTitle = styled.h3`
   font-family: "neo-bold";
-  /* font-size: 50px; */
   font-size: 3.5rem;
   line-height: 140%;
   color: #38323c;
@@ -831,15 +836,35 @@ interface MainPageProps {
   storyList: {}[];
 }
 const MainPage = ({ storyList }: MainPageProps) => {
-  // 모바일 사이즈
-  const MobileSize = useMediaQuery({ query: "(max-width: 767px)" });
+  const categoryBoxDom = useRef<any>();
 
-  // 운동하기 > 롤링 animation
-  const animatedItem = useScrollMove({
-    x: MobileSize ? -340 : -450,
-    duration: 3, // 속도 변경 가능합니다
-    delay: 0,
-  });
+  /**
+   * State
+   * @isPlaySwiper : 자동 롤링을 위한 스크롤 감지 상태
+   */
+  const [isPlaySwiper, setIsPlaySwiper] = useState<boolean>(false);
+
+  // 운동하기 롤링을 위한, 스크롤 감지 시 상태반영
+  useEffect(() => {
+    let observer: any;
+    const { current } = categoryBoxDom;
+
+    if (current) {
+      // threshold : 노출 비율 0.7 = 70% 정도 도출되었을 때 나타남
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          const { current }: { current: any } = categoryBoxDom;
+          if (current && entry.isIntersecting) setIsPlaySwiper(true);
+        },
+        {
+          threshold: 0.7,
+        }
+      );
+      observer.observe(current);
+    }
+
+    return () => observer && observer.disconnect();
+  }, []);
 
   // [Mobile/PC 공통UI]
   // 운동하기 > 카테고리 slider 영역 UI
@@ -859,15 +884,65 @@ const MainPage = ({ storyList }: MainPageProps) => {
       ImgExercise_illiptical,
       ImgExercise_balletfit,
     ];
+    let options = {
+      speed: 1000,
+      breakpoints: {
+        "767": {
+          slidesPerView: 3,
+          spaceBetween: 20,
+          centeredSlides: true,
+        },
+        "300": {
+          slidesPerView: 3,
+          spaceBetween: 12,
+          centeredSlides: true,
+        },
+      },
+      autoplay: {},
+    };
+    if (isPlaySwiper)
+      options = {
+        ...options,
+        autoplay: {
+          delay: 1,
+          stopOnLastSlide: true,
+          disableOnInteraction: false,
+        },
+      };
     return (
-      <CategoryBox>
-        <ul {...animatedItem}>
+      <CategoryBox ref={categoryBoxDom}>
+        <Swiper
+          className="category-swiper"
+          speed={1000}
+          autoplay={{
+            delay: 1,
+            stopOnLastSlide: true,
+            disableOnInteraction: false,
+          }}
+          onAutoplayStart={(swiper) => console.log(swiper)}
+          grabCursor={true}
+          breakpoints={{
+            "767": {
+              slidesPerView: 3,
+              spaceBetween: 20,
+              centeredSlides: true,
+            },
+            "300": {
+              slidesPerView: 3,
+              spaceBetween: 12,
+              centeredSlides: true,
+            },
+          }}
+        >
           {imgs.map((img, i) => (
-            <li key={i}>
-              <img src={img} alt="" />
-            </li>
+            <SwiperSlide key={i}>
+              <div className="slider-box">
+                <img src={img} alt="" />
+              </div>
+            </SwiperSlide>
           ))}
-        </ul>
+        </Swiper>
+
         <p>
           13가지 다양한
           <br />
@@ -875,7 +950,7 @@ const MainPage = ({ storyList }: MainPageProps) => {
         </p>
       </CategoryBox>
     );
-  }, [animatedItem]);
+  }, [isPlaySwiper]);
 
   return (
     <Container>
@@ -1194,22 +1269,38 @@ const MainPage = ({ storyList }: MainPageProps) => {
           사운드짐 서비스를 이용한 회원들의 리얼 생생 후기를 들어보세요
         </p>
         <StoryBoxContainer>
-          {storyList?.map((item: any) => (
-            <li key={item.id}>
-              <img src={ImgStoryReview} alt="" />
-              <p className="title">{item.title}</p>
-              <p className="comment">{item.comment}</p>
-              <div className="user-info">
-                <img src={ImgProfile_1} alt="" />
-                <div className="text">
-                  <p className="user">
-                    {item.name[0]}OO - {item.age} {item.gender}
-                  </p>
-                  <p className="type">{item.type}</p>
+          <Swiper
+            breakpoints={{
+              "767": {
+                slidesPerView: 5.2,
+                spaceBetween: 20,
+                centeredSlides: true,
+              },
+              "300": {
+                slidesPerView: 1.3,
+                spaceBetween: 16,
+              },
+            }}
+          >
+            {storyList?.map((item: any) => (
+              <SwiperSlide key={item.id}>
+                <div className="swiper-box">
+                  <img src={ImgStoryReview} alt="" />
+                  <p className="title">{item.title}</p>
+                  <p className="comment">{item.comment}</p>
+                  <div className="user-info">
+                    <img src={ImgProfile_1} alt="" />
+                    <div className="text">
+                      <p className="user">
+                        {item.name[0]}OO - {item.age} {item.gender}
+                      </p>
+                      <p className="type">{item.type}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </StoryBoxContainer>
       </StoryArea>
       {/* Link */}
