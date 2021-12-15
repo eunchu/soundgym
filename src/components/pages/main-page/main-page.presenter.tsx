@@ -901,7 +901,7 @@ const MainPage = ({ storyList }: MainPageProps) => {
       ImgExercise_balletfit,
     ];
     return (
-      <CategoryBox ref={categoryBoxDom}>
+      <CategoryBox ref={categoryBoxDom} className="category-swiper-container">
         <Swiper
           className="category-swiper"
           speed={1000}
@@ -929,7 +929,8 @@ const MainPage = ({ storyList }: MainPageProps) => {
           }}
         >
           {imgs.map((img, i) => (
-            <SwiperSlide key={i}>
+            // data-swiper-autoplay 속성으로 속도를 제어할 수 있습니다
+            <SwiperSlide key={i} data-swiper-autoplay={isPlaySwiper ? 100 : 0}>
               <div className="slider-box">
                 <img src={img} alt="" />
               </div>

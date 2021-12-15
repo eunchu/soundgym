@@ -808,7 +808,7 @@ const CompanyServicePage = () => {
   const programSliderEl = useMemo(() => {
     const imgs = [ImgProgram01, ImgProgram02, ImgProgram03, ImgProgram04];
     return (
-      <ProgramBox ref={programBoxDom}>
+      <ProgramBox ref={programBoxDom} className="program-swiper-container">
         <Swiper
           className="category-swiper"
           speed={1000}
@@ -821,7 +821,6 @@ const CompanyServicePage = () => {
                 }
               : {}
           }
-          grabCursor={true}
           breakpoints={{
             "767": {
               slidesPerView: 3,
@@ -836,7 +835,8 @@ const CompanyServicePage = () => {
           }}
         >
           {imgs.map((img, i) => (
-            <SwiperSlide key={i}>
+            // data-swiper-autoplay 속성으로 속도를 제어할 수 있습니다
+            <SwiperSlide key={i} data-swiper-autoplay={isPlaySwiper ? 100 : 0}>
               <li>
                 <img src={img} alt="" />
               </li>
