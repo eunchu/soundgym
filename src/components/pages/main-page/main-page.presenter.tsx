@@ -638,10 +638,11 @@ const StoryBoxContainer = styled.ul`
   display: flex;
   align-items: center;
 
-  padding-left: 11%;
+  /* padding-left: 11%; */
   overflow: hidden;
   ${mediaQueries("mobile")`
     margin-left: 0;
+    padding-left: 0;
   `}
   .story-slide {
     width: 100%;
@@ -1268,7 +1269,7 @@ const MainPage = ({ storyList }: MainPageProps) => {
               "767": {
                 slidesPerView: 4.2,
                 spaceBetween: 20,
-                // centeredSlides: true,
+                centeredSlides: true,
               },
               "300": {
                 slidesPerView: 1.3,
