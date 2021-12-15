@@ -284,7 +284,10 @@ const Header = ({
   // theme
   const location = useLocation();
   const footerDarkTheme =
-    location && ["/soundgym", "/soundgym/service"].includes(location.pathname);
+    location &&
+    ["/soundgym", "/soundgym/", "/soundgym/service"].includes(
+      location.pathname
+    );
   const haderDarkTheme = location && location.pathname === "/soundgym/service";
 
   // 모바일 사이즈
