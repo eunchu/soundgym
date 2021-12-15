@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
 
 import SwiperCore, {
   Navigation,
@@ -16,7 +15,6 @@ import "swiper/modules/effect-fade/effect-fade.scss";
 
 import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
-import { useScrollMove } from "hooks";
 
 // Visual imgs
 import IconAppleLogo from "assets/images/ic-apple-logo.svg";
@@ -587,14 +585,16 @@ const ShoppingArea = styled.section`
   }
 `;
 // 회원들의 이야기
-const StoryArea = styled.section`
+interface StoryAreaProps {
+  swiperEnd: boolean;
+}
+const StoryArea = styled.section<StoryAreaProps>`
   text-align: center;
 
   background-color: #ffffff;
   padding: 200px 0 253px 0;
   ${mediaQueries("mobile")`
-    text-align: left;
-    padding: 62px 0 60px 16px;
+    padding: 62px 0 60px 0;
   `}
   h2 {
     font-family: "neo-bold";
@@ -605,7 +605,9 @@ const StoryArea = styled.section`
     ${mediaQueries("mobile")`
       font-size: 28px;
       line-height: 40px;
+      text-align: left;
 
+      padding-left: 16px;
       margin-bottom: 14px;
     `}
   }
@@ -620,21 +622,33 @@ const StoryArea = styled.section`
       
       font-size: 16px;
       line-height: 24px;
+      text-align: left;
       
+      padding-left: 16px;
       margin-bottom: 40px;
     `}
+  }
+  .story-slide {
+    @media only screen and (max-width: 767px) {
+      padding: ${(props) => (props.swiperEnd ? "0 16px 0 0" : "0 0 0 16px")};
+    }
   }
 `;
 const StoryBoxContainer = styled.ul`
   display: flex;
   align-items: center;
 
+  padding-left: 11%;
   overflow: hidden;
   ${mediaQueries("mobile")`
     margin-left: 0;
   `}
+  .story-slide {
+    width: 100%;
+  }
   .swiper-box {
-    min-width: 330px;
+    /* max-height: 516px; */
+    /* width: 330px; */
     /* max-width: 330px; */
 
     text-align: left;
@@ -643,7 +657,7 @@ const StoryBoxContainer = styled.ul`
 
     padding: 50px 30px;
     ${mediaQueries("mobile")`
-      min-width: 260px;
+      // min-width: 260px;
 
       padding: 36px 23px 28px 23px;
     `}
@@ -840,8 +854,10 @@ const MainPage = ({ storyList }: MainPageProps) => {
   /**
    * State
    * @isPlaySwiper : 자동 롤링을 위한 스크롤 감지 상태
+   * @isStoryEndSlide : 스타일 변경을 위한 마지막 슬라이드 여부
    */
   const [isPlaySwiper, setIsPlaySwiper] = useState<boolean>(false);
+  const [isStoryEndSlide, changeStoryEndSlide] = useState<boolean>(false);
 
   // 운동하기 롤링을 위한, 스크롤 감지 시 상태반영
   useEffect(() => {
@@ -883,42 +899,20 @@ const MainPage = ({ storyList }: MainPageProps) => {
       ImgExercise_illiptical,
       ImgExercise_balletfit,
     ];
-    let options = {
-      speed: 1000,
-      breakpoints: {
-        "767": {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          centeredSlides: true,
-        },
-        "300": {
-          slidesPerView: 3,
-          spaceBetween: 12,
-          centeredSlides: true,
-        },
-      },
-      autoplay: {},
-    };
-    if (isPlaySwiper)
-      options = {
-        ...options,
-        autoplay: {
-          delay: 1,
-          stopOnLastSlide: true,
-          disableOnInteraction: false,
-        },
-      };
     return (
       <CategoryBox ref={categoryBoxDom}>
         <Swiper
           className="category-swiper"
           speed={1000}
-          autoplay={{
-            delay: 1,
-            stopOnLastSlide: true,
-            disableOnInteraction: false,
-          }}
-          onAutoplayStart={(swiper) => console.log(swiper)}
+          autoplay={
+            isPlaySwiper
+              ? {
+                  delay: 0,
+                  stopOnLastSlide: true,
+                  disableOnInteraction: false,
+                }
+              : {}
+          }
           grabCursor={true}
           breakpoints={{
             "767": {
@@ -1262,24 +1256,26 @@ const MainPage = ({ storyList }: MainPageProps) => {
         </div>
       </ShoppingArea>
       {/* 회원들의 이야기 */}
-      <StoryArea>
+      <StoryArea swiperEnd={isStoryEndSlide}>
         <h2>사운드짐 회원들의 이야기</h2>
         <p className="desc">
           사운드짐 서비스를 이용한 회원들의 리얼 생생 후기를 들어보세요
         </p>
         <StoryBoxContainer>
           <Swiper
+            className="story-slide"
             breakpoints={{
               "767": {
-                slidesPerView: 5.2,
+                slidesPerView: 4.2,
                 spaceBetween: 20,
-                centeredSlides: true,
+                // centeredSlides: true,
               },
               "300": {
                 slidesPerView: 1.3,
                 spaceBetween: 16,
               },
             }}
+            onActiveIndexChange={(swiper) => changeStoryEndSlide(swiper.isEnd)}
           >
             {storyList?.map((item: any) => (
               <SwiperSlide key={item.id}>

@@ -1,10 +1,8 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
 
 import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
-import { useScrollMove } from "hooks";
 
 import SwiperCore, {
   Navigation,
@@ -233,24 +231,14 @@ const ProgramBox = styled.div`
     margin-top: 40px;
     padding: 60px 0 30px 0;
   `}
-  ul {
+  .category-swiper {
     display: flex;
-    padding-left: 26%;
 
     margin-bottom: 80px;
     ${mediaQueries("mobile")`
-      padding-left: 23%;
       margin-bottom: 90px;
     `}
     li {
-      min-width: 172px;
-      max-width: 172px;
-      margin-right: 16px;
-      ${mediaQueries("mobile")`
-        min-width: 128px;
-        max-width: 128px;
-        margin-right: 11px;
-      `}
       img {
         width: 100%;
       }
@@ -563,11 +551,14 @@ const BusinessList = styled.section`
   }
 `;
 // 고객들의 이야기
-const StoryArea = styled.section`
+interface StoryAreaProps {
+  swiperEnd: boolean;
+}
+const StoryArea = styled.section<StoryAreaProps>`
   background-color: #000000;
   padding: 200px 16px;
   ${mediaQueries("mobile")`
-    padding: 60px 0 0 16px;
+    padding: 60px 0 0 0;
   `}
   .inner {
     text-align: center;
@@ -605,9 +596,15 @@ const StoryArea = styled.section`
       display: flex;
       align-items: center;
       overflow: auto;
+
       ${mediaQueries("mobile")`
         overflow: hidden;
       `}
+    }
+    .slider-m {
+      @media only screen and (max-width: 767px) {
+        padding: ${(props) => (props.swiperEnd ? "0 16px 0 0" : "0 0 0 16px")};
+      }
     }
   }
 `;
@@ -774,29 +771,78 @@ const SubTitle = styled.h3`
 // <<< Style
 
 const CompanyServicePage = () => {
-  // 모바일 사이즈
-  const MobileSize = useMediaQuery({ query: "(max-width: 767px)" });
+  const programBoxDom = useRef<any>();
 
-  // 기업 맞춤 콘텐츠 > 롤링 animation
-  const animatedItem = useScrollMove({
-    x: MobileSize ? -340 : -450,
-    duration: 3, // 속도 변경 가능합니다
-    delay: 0,
-  });
+  /**
+   * State
+   * @isPlaySwiper : 자동 롤링을 위한 스크롤 감지 상태
+   * @isStoryEndSlide : 스타일 변경을 위한 마지막 슬라이드 여부
+   */
+  const [isPlaySwiper, setIsPlaySwiper] = useState<boolean>(false);
+  const [isStoryEndSlide, changeStoryEndSlide] = useState<boolean>(false);
+
+  // 운동하기 롤링을 위한, 스크롤 감지 시 상태반영
+  useEffect(() => {
+    let observer: any;
+    const { current } = programBoxDom;
+
+    if (current) {
+      // threshold : 노출 비율 0.7 = 70% 정도 도출되었을 때 나타남
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          const { current }: { current: any } = programBoxDom;
+          if (current && entry.isIntersecting) setIsPlaySwiper(true);
+        },
+        {
+          threshold: 0.7,
+        }
+      );
+      observer.observe(current);
+    }
+
+    return () => observer && observer.disconnect();
+  }, []);
 
   // [Mobile/PC 공통UI]
   // 기업 맞춤 콘텐츠 > slider 영역 UI
   const programSliderEl = useMemo(() => {
     const imgs = [ImgProgram01, ImgProgram02, ImgProgram03, ImgProgram04];
     return (
-      <ProgramBox>
-        <ul {...animatedItem}>
+      <ProgramBox ref={programBoxDom}>
+        <Swiper
+          className="category-swiper"
+          speed={1000}
+          autoplay={
+            isPlaySwiper
+              ? {
+                  delay: 0,
+                  stopOnLastSlide: true,
+                  disableOnInteraction: false,
+                }
+              : {}
+          }
+          grabCursor={true}
+          breakpoints={{
+            "767": {
+              slidesPerView: 3,
+              spaceBetween: 16,
+              centeredSlides: true,
+            },
+            "300": {
+              slidesPerView: 3,
+              spaceBetween: 12,
+              centeredSlides: true,
+            },
+          }}
+        >
           {imgs.map((img, i) => (
-            <li key={i}>
-              <img src={img} alt="" />
-            </li>
+            <SwiperSlide key={i}>
+              <li>
+                <img src={img} alt="" />
+              </li>
+            </SwiperSlide>
           ))}
-        </ul>
+        </Swiper>
         <p>
           체계적인
           <br /> 전문가
@@ -807,7 +853,7 @@ const CompanyServicePage = () => {
         </p>
       </ProgramBox>
     );
-  }, [animatedItem]);
+  }, [isPlaySwiper]);
 
   return (
     <Container>
@@ -1054,7 +1100,7 @@ const CompanyServicePage = () => {
         </div>
       </BusinessList>
       {/* 고객들의 이야기 */}
-      <StoryArea>
+      <StoryArea swiperEnd={isStoryEndSlide}>
         <div className="inner">
           <h3>사운드짐 고객들의 이야기</h3>
           <Default>
@@ -1152,13 +1198,12 @@ const CompanyServicePage = () => {
           </Default>
           <Mobile>
             <Swiper
+              className="slider-m"
               slidesPerView={1.3}
               spaceBetween={16}
-              on={{
-                touchMove: (swiper) => {
-                  console.log("1", swiper);
-                },
-              }}
+              onActiveIndexChange={(swiper) =>
+                changeStoryEndSlide(swiper.isEnd)
+              }
             >
               <SwiperSlide>
                 <StoryBox>

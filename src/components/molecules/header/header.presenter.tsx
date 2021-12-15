@@ -389,7 +389,9 @@ const Header = ({
           {/* Mobile UI */}
           <Mobile>
             <MobileNavi onClick={() => onClickMenuOpen()}>
-              {scrollY >= 320 && <DownloadBtn>앱 다운로드</DownloadBtn>}
+              {scrollY >= 320 && mainPage && (
+                <DownloadBtn>앱 다운로드</DownloadBtn>
+              )}
               <img src={haderDarkTheme ? IconNavWhite : IconNav} alt="" />
               {isOpenMenu && (
                 <MenuContainer top={60}>
