@@ -7,11 +7,14 @@ import { Default, Mobile } from "utils";
  * Style >>>
  */
 interface ContainerProps {
-  bg: string;
+  theme: string;
 }
 const Container = styled.footer<ContainerProps>`
-  background-color: ${(props) => props.bg};
-  border-top: 1px solid #c5c8ce;
+  background-color: ${(props) =>
+    props.theme === "dark" ? "#28323C" : "#F4F4F4"};
+  border-top: ${(props) =>
+    props.theme === "dark" ? "1px solid #5A6166" : "1px solid #c5c8ce"};
+
   padding: 40px 0 60px;
   div.inner {
     max-width: 1223px;
@@ -96,7 +99,7 @@ interface FooterProps {
 }
 const Footer = ({ theme }: FooterProps) => {
   return (
-    <Container bg={theme === "dark" ? "#28323C" : "#F4F4F4"}>
+    <Container theme={theme}>
       <div className="inner">
         <h3>사운드짐 이용 안내</h3>
         <ul>

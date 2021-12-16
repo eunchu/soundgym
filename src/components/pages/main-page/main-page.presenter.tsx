@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
 import SwiperCore, {
   Navigation,
@@ -21,6 +22,7 @@ import IconAppleLogo from "assets/images/ic-apple-logo.svg";
 import IconGoogleLogo from "assets/images/ic-google-logo.svg";
 import ImgVisualMain from "assets/images/img-visual.png";
 import ImgVisualMainM from "assets/images/img-visual-m.png";
+import IconArrowBottom from "assets/images/ic-arrow-bottom.png";
 // Info imgs
 import IconFire from "assets/images/ic-info-fire.svg";
 // Exercise imgs
@@ -75,7 +77,7 @@ const VisualArea = styled.section`
   padding: 120px 16px 110px 16px;
 
   ${mediaQueries("mobile")`
-    padding: 112px 0 60px 0;
+    padding: 42px 0 60px 0;
   `}
   .inner {
     max-width: 978px;
@@ -115,10 +117,19 @@ const VisualArea = styled.section`
     .visual-img {
       width: 100%;
       ${mediaQueries("mobile")`
+        position: relative;
         padding: 0 42px;
       `}
       img {
         width: 100%;
+      }
+      img.arrow-bottom {
+        position: absolute;
+        bottom: 17%;
+        left: 50%;
+        transform: translateX(-50%);
+
+        width: 15%;
       }
     }
   }
@@ -229,6 +240,8 @@ const MobileExerciseArea = styled.div`
   .desc {
     margin-top: 40px;
     margin-bottom: 37px;
+
+    color: #606872;
   }
 `;
 const MyExerciseBox = styled.div`
@@ -299,6 +312,7 @@ const CategoryBox = styled.div`
       font-size: 20px;
       line-height: 140%;
 
+      padding-left: 30px;
       margin-top: 91px;
     `}
   }
@@ -580,7 +594,7 @@ const ShoppingArea = styled.section`
     }
     .m-img {
       width: 100%;
-      padding: 30px;
+      padding: 30px 0 30px 30px;
     }
   }
 `;
@@ -638,7 +652,6 @@ const StoryBoxContainer = styled.ul`
   display: flex;
   align-items: center;
 
-  /* padding-left: 11%; */
   overflow: hidden;
   ${mediaQueries("mobile")`
     margin-left: 0;
@@ -648,18 +661,12 @@ const StoryBoxContainer = styled.ul`
     width: 100%;
   }
   .swiper-box {
-    /* max-height: 516px; */
-    /* width: 330px; */
-    /* max-width: 330px; */
-
     text-align: left;
     background: #f1f6f9;
     border-radius: 20px;
 
     padding: 50px 30px;
     ${mediaQueries("mobile")`
-      // min-width: 260px;
-
       padding: 36px 23px 28px 23px;
     `}
     img {
@@ -746,6 +753,7 @@ const LinkArea = styled.section`
     justify-content: space-between;
 
     ${mediaQueries("mobile")`
+      width: 100%;
       flex-direction: column;
     `}
     .text-area {
@@ -768,9 +776,9 @@ const LinkArea = styled.section`
     }
     // mobile style
     img.yoga-m {
-      width: 100%;
+      width: calc(100% - 110px);
 
-      padding: 0 55px;
+      /* padding: 0 50px; */
       margin-bottom: 48px;
     }
     p.text-m {
@@ -853,12 +861,18 @@ const MainPage = ({ storyList }: MainPageProps) => {
   const categoryBoxDom = useRef<any>();
 
   /**
-   * State
+   * State >>>
    * @isPlaySwiper : 자동 롤링을 위한 스크롤 감지 상태
    * @isStoryEndSlide : 스타일 변경을 위한 마지막 슬라이드 여부
+   * @scrollY : 스크롤 시 y 값
    */
-  const [isPlaySwiper, setIsPlaySwiper] = useState<boolean>(false);
+  const [isPlaySwiper, setIsPlaySwiper] = useState<any>(false);
   const [isStoryEndSlide, changeStoryEndSlide] = useState<boolean>(false);
+  const [scrollY, setScrollY] = useState<number>(0);
+  // <<<
+
+  // 모바일 사이즈
+  const MobileSize = useMediaQuery({ query: "(max-width: 767px)" });
 
   // 운동하기 롤링을 위한, 스크롤 감지 시 상태반영
   useEffect(() => {
@@ -870,7 +884,9 @@ const MainPage = ({ storyList }: MainPageProps) => {
       observer = new IntersectionObserver(
         ([entry]) => {
           const { current }: { current: any } = categoryBoxDom;
-          if (current && entry.isIntersecting) setIsPlaySwiper(true);
+          if (current && entry.isIntersecting) {
+            setIsPlaySwiper(true);
+          }
         },
         {
           threshold: 0.7,
@@ -883,7 +899,7 @@ const MainPage = ({ storyList }: MainPageProps) => {
   }, []);
 
   // [Mobile/PC 공통UI]
-  // 운동하기 > 카테고리 slider 영역 UI
+  // 운동하기 > 카테고리 slider 자동 롤링 영역 UI
   const categorySliderEl = useMemo(() => {
     const imgs = [
       ImgExercise_indoorBike,
@@ -900,21 +916,23 @@ const MainPage = ({ storyList }: MainPageProps) => {
       ImgExercise_illiptical,
       ImgExercise_balletfit,
     ];
+    if (!isPlaySwiper)
+      return (
+        <CategoryBox
+          ref={categoryBoxDom}
+          className="category-swiper-container"
+        ></CategoryBox>
+      );
     return (
       <CategoryBox ref={categoryBoxDom} className="category-swiper-container">
         <Swiper
           className="category-swiper"
           speed={1000}
-          autoplay={
-            isPlaySwiper
-              ? {
-                  delay: 0,
-                  stopOnLastSlide: true,
-                  disableOnInteraction: false,
-                }
-              : {}
-          }
-          grabCursor={true}
+          autoplay={{
+            delay: 1,
+            stopOnLastSlide: true,
+            disableOnInteraction: false,
+          }}
           breakpoints={{
             "767": {
               slidesPerView: 3,
@@ -930,14 +948,17 @@ const MainPage = ({ storyList }: MainPageProps) => {
         >
           {imgs.map((img, i) => (
             // data-swiper-autoplay 속성으로 속도를 제어할 수 있습니다
-            <SwiperSlide key={i} data-swiper-autoplay={isPlaySwiper ? 100 : 0}>
+            <SwiperSlide
+              key={i}
+              className="swiper-slide"
+              data-swiper-autoplay={100}
+            >
               <div className="slider-box">
                 <img src={img} alt="" />
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-
         <p>
           13가지 다양한
           <br />
@@ -946,6 +967,17 @@ const MainPage = ({ storyList }: MainPageProps) => {
       </CategoryBox>
     );
   }, [isPlaySwiper]);
+
+  // 스크롤 y값 상태 저장
+  const handleScroll = useCallback(() => {
+    setScrollY(window.scrollY);
+  }, []);
+  useEffect(() => {
+    window.addEventListener("scroll", () => handleScroll(), true);
+    return () =>
+      window.removeEventListener("scroll", () => handleScroll(), true);
+  }, [handleScroll]);
+  // <<<
 
   return (
     <Container>
@@ -988,6 +1020,9 @@ const MainPage = ({ storyList }: MainPageProps) => {
             </Default>
             <Mobile>
               <img src={ImgVisualMainM} alt="" />
+              {scrollY === 0 && (
+                <img className="arrow-bottom" src={IconArrowBottom} alt="" />
+              )}
             </Mobile>
           </div>
         </div>
@@ -1267,10 +1302,17 @@ const MainPage = ({ storyList }: MainPageProps) => {
           <Swiper
             className="story-slide"
             breakpoints={{
-              "767": {
+              "1750": {
                 slidesPerView: 5.2,
                 spaceBetween: 20,
-                // centeredSlides: true,
+              },
+              "1200": {
+                slidesPerView: 4.2,
+                spaceBetween: 20,
+              },
+              "768": {
+                slidesPerView: 3.2,
+                spaceBetween: 20,
               },
               "300": {
                 slidesPerView: 1.3,
@@ -1280,7 +1322,9 @@ const MainPage = ({ storyList }: MainPageProps) => {
             autoHeight={true}
             onActiveIndexChange={(swiper) => changeStoryEndSlide(swiper.isEnd)}
           >
-            <Default>{!isStoryEndSlide && <SwiperSlide></SwiperSlide>}</Default>
+            <Default>
+              {!isStoryEndSlide && !MobileSize && <SwiperSlide></SwiperSlide>}
+            </Default>
             {storyList?.map((item: any) => (
               <SwiperSlide key={item.id}>
                 <div className="swiper-box">
@@ -1299,7 +1343,9 @@ const MainPage = ({ storyList }: MainPageProps) => {
                 </div>
               </SwiperSlide>
             ))}
-            <Default>{isStoryEndSlide && <SwiperSlide></SwiperSlide>}</Default>
+            <Default>
+              {isStoryEndSlide && !MobileSize && <SwiperSlide></SwiperSlide>}
+            </Default>
           </Swiper>
         </StoryBoxContainer>
       </StoryArea>

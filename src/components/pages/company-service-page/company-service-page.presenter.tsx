@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { mediaQueries } from "assets/styles/media";
@@ -19,6 +19,7 @@ import "swiper/modules/effect-fade/effect-fade.scss";
 // Visual imgs
 import ImgVisual from "assets/images/img-com-visual.png";
 import ImgVisual_m from "assets/images/img-com-visual-m.png";
+import IconArrowBottom from "assets/images/ic-arrow-bottom.png";
 // Info imgs
 import IconDumbbel from "assets/images/ic-dumbbel.png";
 // 기업 맞춤 콘텐츠 imgs
@@ -96,11 +97,24 @@ const VisualArea = styled.section`
         justify-content: center;
       `}
     }
-    img {
+    img.bg {
       width: 100%;
       ${mediaQueries("mobile")`
-        padding: 0 60px;
+          padding: 0 60px;
+        `}
+    }
+    .img-area {
+      ${mediaQueries("mobile")`
+        position: relative;
       `}
+      img.arrow-bottom {
+        position: absolute;
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+
+        width: 15%;
+      }
     }
   }
 `;
@@ -198,10 +212,10 @@ const ChallengeBox = styled.div`
   border-radius: 24px;
   background-color: #28323c;
 
-  padding: 66px 56px 60px 56px;
+  padding: 66px 57px 60px 57px;
   margin-top: 140px;
   ${mediaQueries("mobile")`
-    padding: 40px 41px 30px 41px;
+    padding: 40px 40px 30px 40px;
     margin-top: 40px;
   `}
   img {
@@ -214,10 +228,13 @@ const ChallengeBox = styled.div`
     color: #ffffff;
 
     margin-top: 66px;
+    margin-left: -7px;
     ${mediaQueries("mobile")`
       font-size: 20px;
       line-height: 140%;
+
       margin-top: 46px;
+      margin-left: -10px;
     `}
   }
 `;
@@ -254,6 +271,8 @@ const ProgramBox = styled.div`
     ${mediaQueries("mobile")`
       font-size: 20px;
       line-height: 140%;
+
+      padding-left: 30px;
     `}
   }
 `;
@@ -774,12 +793,15 @@ const CompanyServicePage = () => {
   const programBoxDom = useRef<any>();
 
   /**
-   * State
+   * State >>>
    * @isPlaySwiper : 자동 롤링을 위한 스크롤 감지 상태
    * @isStoryEndSlide : 스타일 변경을 위한 마지막 슬라이드 여부
+   * @scrollY : 스크롤 시 y 값
    */
   const [isPlaySwiper, setIsPlaySwiper] = useState<boolean>(false);
   const [isStoryEndSlide, changeStoryEndSlide] = useState<boolean>(false);
+  const [scrollY, setScrollY] = useState<number>(0);
+  // <<<
 
   // 운동하기 롤링을 위한, 스크롤 감지 시 상태반영
   useEffect(() => {
@@ -804,9 +826,16 @@ const CompanyServicePage = () => {
   }, []);
 
   // [Mobile/PC 공통UI]
-  // 기업 맞춤 콘텐츠 > slider 영역 UI
+  // 기업 맞춤 콘텐츠 > slider 자동 롤링 영역 UI
   const programSliderEl = useMemo(() => {
     const imgs = [ImgProgram01, ImgProgram02, ImgProgram03, ImgProgram04];
+    if (!isPlaySwiper)
+      return (
+        <ProgramBox
+          ref={programBoxDom}
+          className="program-swiper-container"
+        ></ProgramBox>
+      );
     return (
       <ProgramBox ref={programBoxDom} className="program-swiper-container">
         <Swiper
@@ -836,7 +865,7 @@ const CompanyServicePage = () => {
         >
           {imgs.map((img, i) => (
             // data-swiper-autoplay 속성으로 속도를 제어할 수 있습니다
-            <SwiperSlide key={i} data-swiper-autoplay={isPlaySwiper ? 100 : 0}>
+            <SwiperSlide key={i} data-swiper-autoplay={100}>
               <li>
                 <img src={img} alt="" />
               </li>
@@ -855,6 +884,17 @@ const CompanyServicePage = () => {
     );
   }, [isPlaySwiper]);
 
+  // 스크롤 y값 상태 저장
+  const handleScroll = useCallback(() => {
+    setScrollY(window.scrollY);
+  }, []);
+  useEffect(() => {
+    window.addEventListener("scroll", () => handleScroll(), true);
+    return () =>
+      window.removeEventListener("scroll", () => handleScroll(), true);
+  }, [handleScroll]);
+  // <<<
+
   return (
     <Container>
       {/* Visual */}
@@ -870,7 +910,7 @@ const CompanyServicePage = () => {
               <Button>상담 신청하기</Button>
               <Button>기업서비스 소개서 받기</Button>
             </div>
-            <img src={ImgVisual} alt="" />
+            <img className="bg" src={ImgVisual} alt="" />
           </Default>
           <Mobile>
             <h2>
@@ -882,7 +922,12 @@ const CompanyServicePage = () => {
               <ButtonLine>상담 신청하기</ButtonLine>
               <ButtonLine>기업 소개서 받기</ButtonLine>
             </div>
-            <img src={ImgVisual_m} alt="" />
+            <div className="img-area">
+              <img className="bg" src={ImgVisual_m} alt="" />
+              {scrollY === 0 && (
+                <img className="arrow-bottom" src={IconArrowBottom} alt="" />
+              )}
+            </div>
           </Mobile>
         </div>
       </VisualArea>
