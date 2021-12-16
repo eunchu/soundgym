@@ -1268,17 +1268,19 @@ const MainPage = ({ storyList }: MainPageProps) => {
             className="story-slide"
             breakpoints={{
               "767": {
-                slidesPerView: 4.2,
+                slidesPerView: 5.2,
                 spaceBetween: 20,
-                centeredSlides: true,
+                // centeredSlides: true,
               },
               "300": {
                 slidesPerView: 1.3,
                 spaceBetween: 16,
               },
             }}
+            autoHeight={true}
             onActiveIndexChange={(swiper) => changeStoryEndSlide(swiper.isEnd)}
           >
+            <Default>{!isStoryEndSlide && <SwiperSlide></SwiperSlide>}</Default>
             {storyList?.map((item: any) => (
               <SwiperSlide key={item.id}>
                 <div className="swiper-box">
@@ -1297,6 +1299,7 @@ const MainPage = ({ storyList }: MainPageProps) => {
                 </div>
               </SwiperSlide>
             ))}
+            <Default>{isStoryEndSlide && <SwiperSlide></SwiperSlide>}</Default>
           </Swiper>
         </StoryBoxContainer>
       </StoryArea>
