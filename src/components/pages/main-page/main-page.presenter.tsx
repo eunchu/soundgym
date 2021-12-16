@@ -2,17 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 
-import SwiperCore, {
-  Navigation,
-  Pagination,
-  EffectFade,
-  Autoplay,
-} from "swiper";
+import SwiperCore, { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
 import "swiper/swiper.scss";
-import "swiper/modules/navigation/navigation.scss";
-import "swiper/modules/pagination/pagination.scss";
-import "swiper/modules/effect-fade/effect-fade.scss";
 
 import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
@@ -62,7 +54,7 @@ import IconAppleLogoWhite from "assets/images/ic-apple-logo-white.svg";
 import IconGoogleLogoWhite from "assets/images/ic-google-logo-white.svg";
 
 // Swiper modules
-SwiperCore.use([Pagination, Navigation, EffectFade, Autoplay]);
+SwiperCore.use([Autoplay]);
 
 /**
  * Style >>>
@@ -777,8 +769,6 @@ const LinkArea = styled.section`
     // mobile style
     img.yoga-m {
       width: calc(100% - 110px);
-
-      /* padding: 0 50px; */
       margin-bottom: 48px;
     }
     p.text-m {

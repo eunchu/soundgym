@@ -4,17 +4,9 @@ import styled from "styled-components";
 import { mediaQueries } from "assets/styles/media";
 import { Default, Mobile } from "utils";
 
-import SwiperCore, {
-  Navigation,
-  Pagination,
-  EffectFade,
-  Autoplay,
-} from "swiper";
+import SwiperCore, { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
 import "swiper/swiper.scss";
-import "swiper/modules/navigation/navigation.scss";
-import "swiper/modules/pagination/pagination.scss";
-import "swiper/modules/effect-fade/effect-fade.scss";
 
 // Visual imgs
 import ImgVisual from "assets/images/img-com-visual.png";
@@ -56,7 +48,7 @@ import ImgAdmins from "assets/images/img-admins.png";
 import ImgAdmins_m from "assets/images/img-admins-m.png";
 
 // Swiper modules
-SwiperCore.use([Pagination, Navigation, EffectFade, Autoplay]);
+SwiperCore.use([Autoplay]);
 
 /**
  * Style >>>
